@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.BuyerDao">
+    <resultMap id="buyerMap" type="com.chenyou.admin.domain.SysUserBuyer">
+        <id column="uid" property="uid" />
+        <result column="userAccount" property="userAccount"/>
+        <result column="userPassword" property="userPassword" />
+        <result column="pullMoneyPasswd" property="pullMoneyPasswd" />
+        <result column="tbShopNum" property="tbShopNum" />
+        <result column="jdShopNum" property="jdShopNum"/>
+        <result column="userType" property="userType"/>
+        <result column="mobilePhone" property="mobilePhone"/>
+        <result column="mail" property="mail"/>
+        <result column="userWeiXin" property="userWeiXin"/>
+        <result column="userQQ" property="userQQ"/>
+        <result column="userAlipay" property="userAlipay"/>
+        <result column="sex" property="sex"/>
+        <result column="marryFlag" property="marryFlag"/>
+        <result column="userDegree" property="userDegree"/>
+        <result column="schoolName" property="schoolName"/>
+        <result column="birthFlag" property="birthFlag" />
+        <result column="birthday" property="birthday" />
+        <result column="constellation" property="constellation" />
+        <result column="receiverAddress" property="receiverAddress" />
+        <result column="receiverPhone" property="receiverPhone" />
+        <result column="receiverName" property="receiverName" />
+        <result column="userBankAddress" property="userBankAddress" />
+        <result column="userBankName" property="userBankName" />
+        <result column="userBankAccount" property="userBankAccount" />
+        <result column="userBankPhone" property="userBankPhone" />
+        <result column="height" property="height" />
+        <result column="weight" property="weight" />
+        <result column="clothingSize" property="clothingSize" />
+        <result column="clothingStyle" property="clothingStyle" />
+        <result column="myopia" property="myopia" />
+        <result column="threeSize1" property="threeSize1" />
+        <result column="threeSize2" property="threeSize2" />
+        <result column="threeSize3" property="threeSize3" />
+        <result column="job" property="job" />
+        <result column="monthIncome" property="monthIncome" />
+        <result column="car" property="car" />
+        <result column="headImg" property="headImg" />
+        <result column="vipLevel" property="vipLevel" />
+        <result column="vipEndTime" property="vipEndTime" />
+        <result column="userIcon" property="userIcon" />
+        <result column="userInfoNum" property="userInfoNum" />
+        <result column="infoFinishedNum" property="infoFinishedNum" />
+        <result column="realName" property="realName" />
+        <result column="xmoney" property="xmoney" />
+        <result column="freeMoney" property="freeMoney" />
+        <result column="waitingPaybackMoney" property="waitingPaybackMoney" />
+        <result column="frozenMoney" property="frozenMoney" />
+        <result column="withdrawnMoney" property="withdrawnMoney" />
+        <result column="coins_num" property="coinsNum" />
+        <result column="sendingCoins" property="sendingCoins" />
+        <result column="userTaskNum" property="userTaskNum" />
+        <result column="finishedTaskNum" property="finishedTaskNum" />
+        <result column="invitationCode" property="invitationCode" />
+        <result column="invitation_uid" property="invitationUid" />
+        <result column="invitationNum" property="invitationNum" />
+        <result column="invitationPrize" property="invitationPrize" />
+        <result column="invitationPrizeCoin" property="invitationPrizeCoin" />
+        <result column="wwID" property="wwID" />
+        <result column="wwLevel" property="wwLevel" />
+        <result column="wwImg" property="wwImg" />
+        <result column="wwRefuseReason" property="wwRefuseReason" />
+        <result column="idCard" property="idCard" />
+        <result column="idCardImg" property="idCardImg" />
+        <result column="availableDeposit" property="availableDeposit" />
+        <result column="sellerFrozenDeposit" property="sellerFrozenDeposit" />
+        <result column="standMoney" property="standMoney" />
+        <result column="taobaoScore" property="taobaoScore" />
+        <result column="jdScore" property="jdScore" />
+        <result column="lastLoginTime" property="lastLoginTime" />
+        <result column="registeTime" property="registeTime" />
+        <result column="forbiddenTime" property="forbiddenTime" />
+        <result column="updateUser" property="updateUser" />
+        <result column="loginIp" property="loginIp" />
+        <result column="invalidFlag" property="invalidFlag" />
+        <collection property="buyAccountList" resultMap="buyAccountMap"></collection>
+    </resultMap>
+    <resultMap id="buyAccountMap" type="com.chenyou.admin.domain.BuyAccount">
+        <id column="bid" property="id" />
+        <result column="buid" property="uid"/>
+        <result column="buserAccount" property="userAccount" />
+        <result column="bbuyAccount" property="buyAccount" />
+        <result column="bplatformID" property="platformID"/>
+        <result column="bplatformName" property="platformName" />
+        <result column="baccountLevel" property="accountLevel" />
+        <result column="baccountImg" property="accountImg" />
+        <result column="bcomment" property="comment" />
+        <result column="brefuseComment" property="refuseComment" />
+        <result column="bstatus" property="bstatus" />
+        <result column="baddTime" property="addTime" />
+        <result column="binvalidFlag" property="invalidFlag" />
+    </resultMap>
+    
+    <sql id="selectAllAs">
+    SELECT
+        s.uid AS uid,
+        s.user_account AS userAccount,
+        s.user_password AS userPassword,
+        s.pull_money_passwd AS pullMoneyPasswd,
+        s.tb_shop_num AS tbShopNum,
+        s.jd_shop_num AS jdShopNum,
+        s.user_type AS userType,
+        s.mobile_phone AS mobilePhone,
+        s.mail AS mail,
+        s.user_weixin AS userWeiXin,
+        s.user_qq AS userQQ,
+        s.user_alipay_account AS userAlipay,
+        s.sex AS sex,
+        s.marry_flag AS marryFlag,
+        s.user_degree AS userDegree,
+        s.school_name AS schoolName,
+        s.birth_flag AS birthFlag,
+        DATE_FORMAT(s.birthday, '%Y-%m-%d') AS birthday,
+        s.constellation AS constellation,
+        s.receiver_address AS receiverAddress,
+        s.receiver_phone AS receiverPhone,
+        s.receiver_name AS receiverName,
+        s.user_bank_address AS userBankAddress,
+        s.user_bank_name AS userBankName,
+        s.user_bank_account AS userBankAccount,
+        s.user_bank_phone AS userBankPhone,
+        s.height AS height,
+        s.weight AS weight,
+        s.clothing_size AS clothingSize,
+        s.shose_size AS shoseSize,
+        s.clothing_style AS clothingStyle,
+        s.myopia AS myopia,
+        s.three_size1 AS threeSize1,
+        s.three_size2 AS threeSize2,
+        s.three_size3 AS threeSize3,
+        s.job AS job,
+        s.month_income AS monthIncome,
+        s.car AS car,
+        s.head_img AS headImg,
+        s.vip_level AS vipLevel,
+        DATE_FORMAT(s.vip_end_time, '%Y-%m-%d') AS vipEndTime,
+        s.user_icon AS userIcon,
+        s.user_info_num AS userInfoNum,
+        s.info_finished_num AS infoFinishedNum,
+        s.real_name AS realName,
+        s.xmoney AS xmoney,
+        s.free_money AS freeMoney,
+        s.waiting_payback_money AS waitingPaybackMoney,
+        s.frozen_money AS frozenMoney,
+        s.withdrawn_money AS withdrawnMoney,
+        s.coins_num AS coins_num,
+        s.sending_coins AS sendingCoins,
+        s.user_task_num AS userTaskNum,
+        s.finished_task_num AS finishedTaskNum,
+        s.invitation_code AS invitationCode,
+        s.invitation_uid AS invitationUid,
+        s.invitation_num AS invitationNum,
+        s.invitation_prize AS invitationPrize,
+        s.invitation_prize_coin AS invitationPrizeCoin,
+        s.ww_id AS wwID,
+        s.ww_level AS wwLevel,
+        s.ww_img AS wwImg,
+        s.ww_refuse_reason AS wwRefuseReason,
+        s.id_card AS idCard,
+        s.id_card_img AS idCardImg,
+        s.available_deposit AS availableDeposit,
+        s.seller_frozen_deposit AS sellerFrozenDeposit,
+        s.stand_money AS standMoney,
+        s.taobao_score AS taobaoScore,
+        s.jd_score AS jdScore,
+        DATE_FORMAT(s.last_login_time, '%Y-%m-%d') AS lastLoginTime,
+        DATE_FORMAT(s.registe_time, '%Y-%m-%d') AS registeTime,
+        DATE_FORMAT(s.forbidden_time, '%Y-%m-%d') AS forbiddenTime,
+        s.update_user AS updateUser,
+        s.login_ip AS loginIp,
+        s.invalid_flag AS invalidFlag
+    </sql>
+
+    <select id="findBuyerPagable" resultMap="buyerMap">
+        <include refid="selectAllAs"></include>
+        , b.id AS bid
+        , b.uid AS buid
+        , b.user_account AS buserAccount
+        , b.buy_account AS bbuyAccount
+        , b.platform_id AS bplatformID
+        , b.platform_name AS bplatformName
+        , b.account_level AS baccountLevel
+        , b.account_img AS baccountImg
+        , b.comment AS bcomment
+        , b.refuse_comment AS brefuseComment
+        , b.bstatus AS bstatus
+        , b.add_time AS baddTime
+        , b.invalid_flag AS binvalidFlag
+        FROM
+          sys_user s LEFT JOIN buy_account b
+        ON s.uid = b.uid
+        WHERE
+          s.user_type = 1 and (s.invalid_flag = 0
+        <if test="withInvalid != null and withInvalid != ''">
+            OR s.invalid_flag = #{withInvalid}
+        </if>
+        )
+        <if test="qq != null and qq != ''">
+            and s.user_qq = #{qq}
+        </if>
+        <if test="uid != null and uid != ''">
+            and s.uid = #{uid}
+        </if>
+        <if test="inuid != null and inuid != ''">
+            and s.invitation_uid = #{inuid}
+        </if>
+        <if test="realName != null and realName != ''">
+          and s.real_name LIKE "%"#{realName}"%"
+        </if>
+        <if test="userAccount != null and userAccount != ''">
+          and s.user_account = #{userAccount}
+        </if>
+        <if test="wwID != null and wwID != ''">
+          and s.ww_id = #{wwID}
+        </if>
+        <if test="sex != null and sex != ''">
+            and s.sex IN <![CDATA[${sex}]]>
+        </if>
+        ORDER BY s.uid DESC
+        <if test="page != null">
+          LIMIT #{page}, #{size}
+        </if>
+    </select>
+    <select id="findOne" parameterType="long" resultMap="buyerMap">
+        <include refid="selectAllAs"></include>
+        , b.id AS bid
+        , b.uid AS buid
+        , b.user_account AS buserAccount
+        , b.buy_account AS bbuyAccount
+        , b.platform_id AS bplatformID
+        , b.platform_name AS bplatformName
+        , b.account_level AS baccountLevel
+        , b.account_img AS baccountImg
+        , b.comment AS bcomment
+        , b.refuse_comment AS brefuseComment
+        , b.bstatus AS bstatus
+        , b.add_time AS baddTime
+        , b.invalid_flag AS binvalidFlag
+         FROM sys_user s LEFT JOIN buy_account b
+        ON s.uid = b.uid
+        WHERE s.uid = #{uid} and s.user_type = 1
+    </select>
+
+    <select id="getAllCount" parameterType="Map" resultType="int">
+        SELECT count(uid) FROM sys_user
+        WHERE
+        user_type = 1 and (invalid_flag = 0
+        <if test="withInvalid != null and withInvalid != ''">
+            OR invalid_flag = #{withInvalid}
+        </if>
+        )
+        <if test="qq != null and qq != ''">
+            and qq = #{qq}
+        </if>
+        <if test="realName != null and realName != ''">
+            and real_name LIKE "%"#{realName}"%"
+        </if>
+        <if test="userAccount != null and userAccount != ''">
+            and user_account = #{userAccount}
+        </if>
+        <if test="wwID != null and wwID != ''">
+            and ww_id = #{wwID}
+        </if>
+        <if test="sex != null and sex != ''">
+            and sex IN  <![CDATA[${sex}]]>
+        </if>
+    </select>
+
+    <update id="updateBuyer" parameterType="com.chenyou.admin.domain.SysUserBuyer">
+    UPDATE sys_user
+    SET
+        <if test="forbiddenTime != null and forbiddenTime != ''">
+        forbidden_time = #{forbiddenTime},
+        </if>
+        <if test="forbiddenReason != null and forbiddenReason != ''">
+        forbidden_reason = #{forbiddenReason},
+        </if>
+        invalid_flag = #{invalidFlag}
+    WHERE
+      uid = #{uid}
+    </update>
+    <update id="updateWatiback" parameterType="map">
+    UPDATE sys_user
+    <set>
+        <if test="frozenDeposit != null and frozenDeposit != ''">
+            waiting_payback_money = waiting_payback_money - #{frozenDeposit},
+            free_money = free_money +  #{frozenDeposit},
+            finished_task_num = finished_task_num + 1
+        </if>
+    </set>
+    WHERE
+      uid = #{uid}
+    </update>
+
+    <select id="getBuyerUidList" parameterType="Map" resultType="String">
+    SELECT uid FROM sys_user
+    <where>
+      user_type = 1
+      <if test="vipLevel != null">
+      and vip_level = #{vipLevel}
+      </if>
+      and invalid_flag = 0
+    </where>
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

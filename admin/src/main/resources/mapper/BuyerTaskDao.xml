@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.BuyerTaskDao">
+
+    <select id="getTasksByParams" parameterType="Map" resultType="com.chenyou.admin.domain.BuyerTaskVO">
+    SELECT
+      t.task_id AS taskID,
+      t.goods_id AS goodsID,
+      t.goods_name AS goodsName,
+      t.goods_parent_class AS goodsParentClass,
+      t.goods_child_class AS goodsChildClass,
+      t.seller_uid AS sellerUid,
+      t.seller_name AS sellerName,
+      t.goods_price AS goodsPrice,
+      t.goods_img AS goodsImg,
+      t.coins_return AS coinsReturn,
+      t.cash_return AS cashReturn,
+      t.uid AS uid,
+      t.user_account AS userAccount,
+      t.buy_account AS buyAccount,
+      t.goods_url AS goodsUrl,
+      t.goods_collection_img AS goodsCollectionImg,
+      t.shop_collection_img AS shopCollectionImg,
+      t.other_shop_url AS otherShopUrl,
+      t.first_day_begin AS firstDayBegin,
+      t.first_day_end AS firstDayEnd,
+      t.second_day_begin AS secondDayBegin,
+      t.second_day_end AS secondDayEnd,
+      t.third_day_begin AS thirdDayBegin,
+      t.third_day_end AS thirdDayEnd,
+      t.prize_time AS prizeTime,
+      t.order_time AS orderTime,
+      t.order_confirm_time AS orderConfirmTime,
+      t.goods_comment AS goodsComment,
+      t.comment_img AS commentImg,
+      t.comment_time AS commentTime,
+      t.comment_confirm_time AS commentConfirmTime,
+      t.comment_copy_time AS commentCopyTime,
+      t.task_approve_time AS taskApproveTime,
+      t.confirm_four_url AS confirmFourUrl,
+      t.trade_no AS tradeNo,
+      t.trade_img AS tradeImg,
+      t.trade_money AS tradeMoney,
+      t.talk_img AS talkImg,
+      t.give_up_reason AS giveUpReason,
+      t.task_status AS taskStatus,
+      t.prize_flag AS prizeFlag,
+      t.add_time AS addTime,
+      t.invalid_flag AS invalidFlag
+    FROM
+        gd_task t
+    WHERE
+         t.invalid_flag = 0
+        <if test="uid != null">
+         and t.uid = #{uid}
+        </if>
+        <if test="userAccount != null">
+         and t.user_account = #{userAccount}
+        </if>
+        ORDER BY t.task_id DESC
+        <if test="page != null">
+        LIMIT #{page}, #{size}
+        </if>
+    </select>
+    <select id="getTotal" parameterType="Map" resultType="int">
+    SELECT COUNT(t.task_id)
+    FROM
+        gd_task t INNER JOIN sys_user u
+        ON t.uid = u.uid
+    WHERE t.invalid_flag = 0
+        <if test="uid != null">
+        and u.uid = #{uid}
+        </if>
+        <if test="userAccount != null">
+        and u.user_account = #{userAccount}
+        </if>
+    </select>
+    <select id="findOne" parameterType="String" resultType="com.chenyou.admin.domain.BuyerTaskVO">
+        SELECT
+            t.task_id AS taskID,
+            t.goods_id AS goodsID,
+            t.goods_name AS goodsName,
+            t.goods_parent_class AS goodsParentClass,
+            t.goods_child_class AS goodsChildClass,
+            t.seller_uid AS sellerUid,
+            t.seller_name AS sellerName,
+            t.goods_price AS goodsPrice,
+            t.goods_img AS goodsImg,
+            t.coins_return AS coinsReturn,
+            t.cash_return AS cashReturn,
+            t.uid AS uid,
+            t.user_account AS userAccount,
+            t.buy_account AS buyAccount,
+            t.goods_url AS goodsUrl,
+            t.goods_collection_img AS goodsCollectionImg,
+            t.shop_collection_img AS shopCollectionImg,
+            t.other_shop_url AS otherShopUrl,
+            t.first_day_begin AS firstDayBegin,
+            t.first_day_end AS firstDayEnd,
+            t.second_day_begin AS secondDayBegin,
+            t.second_day_end AS secondDayEnd,
+            t.third_day_begin AS thirdDayBegin,
+            t.third_day_end AS thirdDayEnd,
+            t.prize_time AS prizeTime,
+            t.order_time AS orderTime,
+            t.order_confirm_time AS orderConfirmTime,
+            t.goods_comment AS goodsComment,
+            t.comment_img AS commentImg,
+            t.comment_time AS commentTime,
+            t.comment_confirm_time AS commentConfirmTime,
+            t.comment_copy_time AS commentCopyTime,
+            t.task_approve_time AS taskApproveTime,
+            t.confirm_four_url AS confirmFourUrl,
+            t.trade_no AS tradeNo,
+            t.trade_img AS tradeImg,
+            t.trade_money AS tradeMoney,
+            t.talk_img AS talkImg,
+            t.give_up_reason AS giveUpReason,
+            t.task_status AS taskStatus,
+            t.prize_flag AS prizeFlag,
+            t.add_time AS addTime,
+            t.invalid_flag AS invalidFlag
+        FROM
+            gd_task t
+        WHERE
+            t.task_id = #{taskID}
+    </select>
+</mapper>

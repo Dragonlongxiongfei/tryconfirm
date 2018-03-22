@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"  layout:decorator="layout" contentType="UTF-8">
+<head>
+    <title></title>
+    <link href="/plugins/jquery-step/jquery-step.css" rel="stylesheet"/>
+    <style type="text/css">
+        html input[disabled]{
+            background-color: #ececec;
+        }
+        .form-horizontal .control-group {
+            margin-bottom: 14px;
+        }
+        .heading {
+            border-bottom: 1px solid #dcdcdc;
+            margin-bottom: 18px;
+            padding-bottom: 5px;
+            padding-left: 10px;
+        }
+        .formSep {
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #dcdcdc;
+        }
+        .form-horizontal .control-label {
+            float: left;
+            width: 130px;
+            padding-top: 5px;
+            text-align: right;
+        }
+        .form-horizontal .controls {
+            margin-left: 30px;
+            padding-left: 130px;
+            margin-bottom: 0px;
+        }
+        select {
+            height: auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px;
+            line-height: 20px;
+        }
+        .input_text {
+            height: 24px;
+            padding: 0px 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #555;
+            vertical-align: middle;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            -webkit-transition: border linear .2s, box-shadow linear .2s;
+            -moz-transition: border linear .2s, box-shadow linear .2s;
+            -o-transition: border linear .2s, box-shadow linear .2s;
+            transition: border linear .2s, box-shadow linear .2s;
+        }
+        .form-horizontal .controls span {
+            color: #666;
+            padding-left: 10px;
+        }
+        ul, ol {
+            padding: 0;
+            margin: 0;
+            display: block;
+            list-style: none;
+        }
+        .span30{
+            width: 30%;
+        }
+
+        ol, ul {
+            list-style: none;
+        }
+        .has-error{
+            color: #c73222!important;
+        }
+    </style>
+
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" layout:fragment="content">
+    <section class="content-header">
+        <h1 id="pageTitle">试客详情</h1>
+    </section>
+    <section class="content">
+        <form id="tf" class="form-horizontal" th:method="post">
+            <div id="jquery-tabs">
+                <!-- 用户基本信息开始 -->
+                <h3>用户基本信息</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">用户头像</label>
+                        <div class="controls">
+                            <img th:src="${sysUserBuyer.headImg}" style="height: 60px;" alt="用户头像" title="用户头像"/>
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">用户id</label>
+                        <div class="controls">
+                            <input class="input_text" style="min-width: 400px;" th:value="${sysUserBuyer.uid}" />
+                            <input type="hidden" id="uid" th:value="${sysUserBuyer.uid}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">用户帐号</label>
+                        <div class="controls">
+                            <input class="input_text" name="userAccount" id="userAccount" style="min-width: 400px;" th:value="${sysUserBuyer.userAccount}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">真实姓名</label>
+                        <div class="controls">
+                            <input class="input_text" placeholder="真实姓名" style="min-width: 400px;" th:value="${sysUserBuyer.realName}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">手机号</label>
+                        <div class="controls">
+                            <input  class="input_text" placeholder="手机号" style="min-width: 400px;" th:value="${sysUserBuyer.mobilePhone}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">微信</label>
+                        <div class="controls">
+                            <input class="input_text" placeholder="微信" style="min-width: 400px;" th:value="${sysUserBuyer.userWeiXin}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">QQ</label>
+                        <div class="controls">
+                            <input class="input_text" placeholder="QQ" style="min-width: 400px;" th:value="${sysUserBuyer.userQQ}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">邮箱</label>
+                        <div class="controls">
+                            <input class="input_text" placeholder="邮箱" style="min-width: 400px;" th:value="${sysUserBuyer.mail}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">禁止登录日期</label>
+                        <div class="controls">
+                            <input name="forbiddenTime" id="forbiddenTime"  class="input_text date" placeholder="禁止登录时间"  th:value="${sysUserBuyer.forbiddenTime}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">禁止登录原因</label>
+                        <div class="controls">
+                            <input name="forbiddenReason" id="forbiddenReason" class="input_text" style="min-width: 400px;" th:value="${sysUserBuyer.forbiddenReason}" />
+                        </div>
+                    </div>
+                </section>
+                <!-- 用户基本信息结束 -->
+                <!-- 会员属性信息start -->
+                <h3>会员属性</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">vip等级</label>
+                        <div class="controls">
+                            <input name="vipLevel" id="vipLevel"  class="input_text" style="min-width: 400px;"  th:value="${sysUserBuyer.vipLevel}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">vip截止时间</label>
+                        <div class="controls">
+                            <input name="vipEndTime" id="vipEndTime" class="input_text" placeholder="vip截止时间"  th:value="${sysUserBuyer.vipEndTime}" />
+                        </div>
+                    </div>
+                </section>
+                <!-- 会员属性信息end -->
+                <!-- 平台验证信息开始 -->
+                <h3>平台验证信息</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">支付宝</label>
+                        <div class="controls">
+                            <input class="input_text" placeholder="支付宝" style="min-width: 400px;" th:value="${sysUserBuyer.userAliPay}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">身份证</label>
+                        <div class="controls">
+                            <input name="idCard" id="idCard" class="input_text" placeholder="身份证号" style="min-width: 400px;" th:value="${sysUserBuyer.idCard}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">旺旺号/京东号</label>
+                        <div class="controls">
+                            <input name="birthday" class="input_text" placeholder="旺旺号" th:value="${sysUserBuyer.wwID  ==  null ? '-' : sysUserBuyer.wwID}" />&nbsp;/
+                            <input name="birthday" class="input_text" placeholder="京东号" th:value="${sysUserBuyer.jdAccount == null ? '-' : sysUserBuyer.jdAccount}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">淘气值/京东值</label>
+                        <div class="controls">
+                            <input name="taobaoScore" id="taobaoScore"  class="input_text" placeholder="淘气值" th:value="${sysUserBuyer.taobaoScore == null ? '-' : sysUserBuyer.taobaoScore}" />&nbsp;/
+                            <input name="jdScore" id="jdScore" class="input_text" placeholder="京东值" th:value="${sysUserBuyer.jdScore == null ? '-' : sysUserBuyer.jdScore}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">旺旺等级</label>
+                        <div class="controls">
+                            <input name="wwLevel" id="wwLevel" class="input_text" placeholder="旺旺等级" style="min-width: 400px;" th:value="${sysUserBuyer.wwLevel}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">银行账号</label>
+                        <div class="controls">
+                            <input name="userBankAccount"  class="input_text" placeholder="银行账号" style="min-width: 400px;"  th:value="${sysUserBuyer.userBankAccount}"/>
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">银行开户地址</label>
+                        <div class="controls">
+                            <input name="userBankAddress" class="input_text" placeholder="银行开户地址" style="min-width: 400px;"  th:value="${sysUserBuyer.userBankAddress}"/>
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">银行开户人姓名</label>
+                        <div class="controls">
+                            <input name="userBankName" class="input_text" placeholder="银行账号" style="min-width: 400px;"  th:value="${sysUserBuyer.userBankName}"/>
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">银行预留电话</label>
+                        <div class="controls">
+                            <input name="userBankName" class="input_text" placeholder="银行预留电话" style="min-width: 400px;"  th:value="${sysUserBuyer.userBankPhone}"/>
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">身份证截图</label>
+                        <div class="controls">
+                            <img th:src="${sysUserBuyer.idCardImg}"/>
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">旺旺号截图</label>
+                        <div class="controls">
+                            <img th:src="${sysUserBuyer.wwImg}" alt="旺旺号（等级）截图" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">旺旺拒绝原因</label>
+                        <div class="controls">
+                            <input name="wwRefuseReason" id="wwRefuseReason" class="input_text" placeholder="旺旺拒绝原因" th:value="${sysUserBuyer.wwRefuseReason}" />
+                        </div>
+                    </div>
+
+                    <div class="control-group formSep">
+                        <label class="control-label">状态</label>
+                        <div class="controls">
+                            <input type="radio" id="invalidFlag" name="invalidFlag" value="0" th:checked="${sysUserBuyer.invalidFlag eq 0}" />正常
+                            <input type="radio" id="invalidFlag" name="invalidFlag" value="1" th:checked="${sysUserBuyer.invalidFlag eq 1}" />禁止
+                        </div>
+                    </div>
+                </section>
+                <!-- 平台认证信息结束 -->
+
+                <!-- 收货信息开始 -->
+                <h3>收货信息</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">收货地址</label>
+                        <div class="controls">
+                            <input name="receiverAddress" id="receiverAddress" style="min-width: 400px;" class="input_text" placeholder="收货地址" th:value="${sysUserBuyer.receiverAddress}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">收货姓名</label>
+                        <div class="controls">
+                            <input name="receiverName" id="receiverName" style="min-width: 400px;" class="input_text" placeholder="收货姓名" th:value="${sysUserBuyer.receiverName}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">收货电话</label>
+                        <div class="controls">
+                            <input name="receiverPhone" id="receiverPhone" style="min-width: 400px;" class="input_text" placeholder="收货电话" th:value="${sysUserBuyer.receiverPhone}" />
+                        </div>
+                    </div>
+                </section>
+                <!-- 收货信息开始 -->
+
+                <!-- 身材信息开始 -->
+                <h3>身材信息</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">性别</label>
+                        <div class="controls">
+                            <input type="radio" name="sex" th:checked="${sysUserBuyer.sex} eq '男'" />男
+                            <input type="radio" name="sex" th:checked="${sysUserBuyer.sex} eq '女'"/>女
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">婚否</label>
+                        <div class="controls">
+                            <input type="radio" name="marryFlag" th:checked="${sysUserBuyer.marryFlag eq 1}" />已婚
+                            <input type="radio" name="marryFlag" th:checked="${sysUserBuyer.marryFlag eq 0}" />未婚
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">身高</label>
+                        <div class="controls">
+                            <input name="height" class="input_text" placeholder="身高" th:value="${sysUserBuyer.height}" />cm
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">体重</label>
+                        <div class="controls">
+                            <input name="weight" class="input_text" placeholder="体重" th:value="${sysUserBuyer.weight}" />kg
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">衣服尺码</label>
+                        <div class="controls">
+                            <input name="clothingSize" class="input_text" placeholder="尺码" th:value="${sysUserBuyer.clothingSize}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">鞋码</label>
+                        <div class="controls">
+                            <input name="shoseSize" class="input_text" placeholder="鞋码" th:value="${sysUserBuyer.shoseSize}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">是否近视</label>
+                        <div class="controls">
+                            <input type="radio" name="myopia" th:checked="${sysUserBuyer.myopia eq true}" />是
+                            <input type="radio" name="myopia" th:checked="${sysUserBuyer.myopia eq false}" />否
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">三围</label>
+                        <div class="controls">
+                            胸围:<span th:text="${'( ' + sysUserBuyer.threeSize1 + ' cm)'}"></span>
+                            腰围:<span th:text="${'( ' + sysUserBuyer.threeSize2 + ' cm)'}"></span>
+                            臀围:<span th:text="${'( ' + sysUserBuyer.threeSize3 + ' cm)'}"></span>
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">生育情况</label>
+                        <div class="controls">
+                            <input type="radio" name="birthFlag" th:checked="${sysUserBuyer.birthFlag eq 0}" />未孕
+                            <input type="radio" name="birthFlag" th:checked="${sysUserBuyer.marryFlag eq 1}" />备孕中
+                            <input type="radio" name="birthFlag" th:checked="${sysUserBuyer.marryFlag eq 2}" />已育
+                        </div>
+                    </div>
+                </section>
+                <!-- 身材信息结束 -->
+
+                <!-- 其他信息开始 -->
+                <h3>其他信息</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">会员学历</label>
+                        <div class="controls">
+                            <input name="userDegreee" class="input_text" style="min-width: 400px;" placeholder="会员学历" th:value="${sysUserBuyer.userDegree}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">毕业院校</label>
+                        <div class="controls">
+                            <input name="school-name" class="input_text" style="min-width: 400px;" placeholder="毕业院校" th:value="${sysUserBuyer.schoolName}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">职业</label>
+                        <div class="controls">
+                            <input name="job" class="input_text" placeholder="会员职业" th:value="${sysUserBuyer.job}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">月收入</label>
+                        <div class="controls">
+                            <input name="monthIncome" class="input_text" placeholder="月收入" th:value="${sysUserBuyer.monthIncome}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">代步工具</label>
+                        <div class="controls">
+                            <input name="car" class="input_text" placeholder="代步工具" th:value="${sysUserBuyer.car}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">着装风格</label>
+                        <div class="controls">
+                            <input name="clothingStyle" class="input_text" placeholder="着装风格" th:value="${sysUserBuyer.clothingStyle}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">星座</label>
+                        <div class="controls">
+                            <input name="constellation" class="input_text" placeholder="星座" th:value="${sysUserBuyer.constellation}" />
+                        </div>
+                    </div>
+                </section>
+                <!-- 其他信息结束 -->
+            </div>
+            <!-- 提交按钮 -->
+        </form>
+        <div class="control-group" style="height:50px; margin-left: 170px;">
+            <div class="controls">
+                <button class="btn btn-primary" id="back">返回</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div style="display: none;" layout:fragment="script">
+    <!-- form validate -->
+    <script src="https://cdn.bootcss.com/jquery-validate/1.16.0/jquery.validate.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.js"></script>
+    <script src="/plugins/jquery-step/jquery-step.js"></script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+
+
+
+
+        function setFormVal(data){
+
+        }
+
+        /*]]>*/
+    </script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+        var pageContext = {
+            pageContextValue: undefined,
+            initPage: function(){
+
+            },
+            bindEvents: function(){
+                $("#jquery-tabs").steps({
+                    headerTag: "h3",
+                    bodyTag: "section",
+                    transitionEffect: "slideLeft",
+                    enableFinishButton: false,
+                    enablePagination: false,
+                    enableAllSteps: true,
+                    titleTemplate: "#title#",
+                    cssClass: "tabcontrol"
+                });
+                $("#back").click(function () {
+                   window.location = "/user/buyerlist";
+                });
+            },
+            setPageContextValue: function(data){
+                this.pageContextValue = data;
+            }
+        };
+
+        /** call pageContext **/
+        pageContext.bindEvents();
+
+
+
+
+
+
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

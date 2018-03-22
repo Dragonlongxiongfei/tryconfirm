@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout">
+<head>
+    <title>普通商家列表</title>
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" layout:fragment="content">
+    <section class="content-header">
+        <h1>普通商家列表</h1>
+    </section>
+
+    <section class="content">
+        <div class="col-md-12 form-group">
+            <form th:action="${'/seller/sellerlist'}" method="post">
+                商家ID:<input id="uid" name="uid" th:value="${uid}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="商家ID" />
+                手机号:<input id="mobilePhone" name="mobilePhone" th:value="${mobilePhone}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="手机号" />
+                VIP类型:&nbsp;<label><input type="checkbox" name="vipLevel" value="1" th:checked="${vipLevel != null and #strings.contains(vipLevel,'1')}" />普通会员</label>
+                <label><input type="checkbox" name="vipLevel" value="2" th:checked="${vipLevel != null and #strings.contains(vipLevel,'2')}" />VIP会员</label>
+                <label><input type="checkbox" name="vipLevel" value="3" th:checked="${vipLevel != null and #strings.contains(vipLevel,'3')}" />超级VIP</label>
+                &nbsp;&nbsp;
+
+                <label>
+                    <input type="checkbox" name="withInvalid" th:value="1" th:checked="${withInvalid eq '1'}" /> 包含禁用
+                </label>
+
+                <button class="btn btn-default" style="vertical-align: top;" type="submit" title="查询">
+                    <i class="glyphicon glyphicon-search icon-search"></i>
+                </button>
+
+            </form>
+
+        </div>
+        <table id="table" class="table" style="word-break:break-all; "></table>
+
+    </section>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="modalDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/seller/chongzhi}" method="post" role="form" id="form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="dialogTitle">充值</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" placeholder="VIP类型" name="vipLevel"/>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" placeholder="保证金" name="standMoney"/>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" placeholder="冻结押金" name="sellerFrozenDeposit"/>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" placeholder="可用押金" name="availableDeposit"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">确认</button>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <span id="errContainer" style="color:red;"/>
+                        <input type="hidden" id="uid" name="uid"/>
+                        <!--<input type="hidden" id="roleId" name="roleId"/>
+                        <input type="hidden" id="roleVersion" name="roleVersion"/>-->
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="modalDialogf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/seller/datasave}" method="post" role="form" id="formf">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="dialogTitlef">封禁</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group has-feedback">
+                        <input type="text" name="forbiddenReason" id="forbiddenReason" placeholder="封禁原因"/>
+                    </div>
+
+
+                            <div class="input-group-addon" style="background-color: #367fa9;color: white">封禁时间</div>
+                            <select name="forbiddenTime" id="forbiddenTime"  class="selectpicker show-tick form-control" >
+                                <option value="0">允许登陆</option>
+                                <option value="3">封禁3天</option>
+                                <option value="7">封禁7天</option>
+                                <!--<option value="">永久封禁</option>-->
+                            </select>
+                            <!--<input type="text" class="form-control" placeholder="封禁天数" name="vipLevel"/>-->
+                        </div>
+                        <div class="form-group has-feedback">
+                                <input type="radio" name="invalidFlag" id="invalidFlag" value="1"/> 永久封禁
+                        </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">确认</button>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <span id="errContainerf" style="color:red;"/>
+                        <input type="hidden" id="uid" name="uid"/>
+                        <!--<input type="hidden" id="roleId" name="roleId"/>
+                        <input type="hidden" id="roleVersion" name="roleVersion"/>-->
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+
+<div style="display: none;" layout:fragment="script">
+    <!-- form validate -->
+    <script src="https://cdn.bootcss.com/jquery-validate/1.16.0/jquery.validate.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.js"></script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+        function tableDataView(row){
+            var view =
+                '<div class="panel panel-info">'
+                + '<div class="panel-heading">'
+                + '<h3 class="panel-title" style="display: inline-block;">基本信息</h3>'
+                + '<a href="/store/list?uId='+ row.uid +'&&with-invalid=1'+'">我的店铺</a>'
+                + '<a href="/task/list?uid='+ row.uid +'&&with_Invalid=1'+'">我的任务</a>'
+                + '<a href="/seller/sellerinfo?uid='+ row.uid+'">基本信息</a>'
+                + '<a href="/seller/chongzhi?uid='+ row.uid+'">充值</a>'
+                + '<a href="/finance/io_record_init?uid='+ row.uid+'">资金明细记录</a>'
+                /*+ '<a href="/seller/sellerinfo?uid='+ row.uid +'">用户信息</a>'*/
+                + '</div>'
+                + '<div class="panel-body">'
+                + '<div class="col-md-3">'
+                + '<div><label style="float: left">商家ID:</label><p style="padding-left: 120px;height: 20px">'+ row.uid +'</p></div>'
+                + '<div><label style="float: left">真实姓名:</label><p style="padding-left: 120px;height: 20px">'+ row.realName +'</p></div>'
+//                + '<div><label style="float: left">用户类型:</label><p style="padding-left: 120px;height: 20px">'+ row.userType +'</p></div>'
+                + '<div><label style="float: left">商家可用押金:</label><p style="padding-left: 120px;height: 20px">'+ row.availableDeposit +'</p></div>'
+                + '<div><label style="float: left">商家已冻结押金:</label><p style="padding-left: 120px;height: 20px">'+ row.sellerFrozenDeposit +'</p></div>'
+                + '<div><label style="float: left">担保金:</label><p style="padding-left: 120px;height: 20px">'+ row.standMoney +'</p></div>'
+                + '<div><label style="float: left">vip等级:</label><p style="padding-left: 120px;height: 20px">'+ row.vipLevel +'</p></div>'
+                + '<div><label style="float: left">vip结束时间:</label><p style="padding-left: 120px;height: 20px">'+ row.vipEndTime +'</p></div>'
+                + '<div><label style="float: left">创建时间:</label><p style="padding-left: 120px;height: 20px">'+ row.registeTime +'</p></div>'
+                + '</div>'
+                + '<div class="col-md-3">'
+                + '<div><label style="float: left">电话:</label><p style="padding-left: 120px;height: 20px">'+ row.mobilePhone +'</p></div>'
+                + '<div><label style="float: left">qq:</label><p style="padding-left: 120px;height: 20px">'+ row.userQQ +'</p></div>'
+                + '<div><label style="float: left">邮箱:</label><p style="padding-left: 120px;height: 20px">'+ row.mail+'</p></div>'
+                + '<div><label style="float: left">微信:</label><p style="padding-left: 120px;height: 20px">'+ row.userWeiXin+'</p></div>'
+                + '<div><label style="float: left">银行账号:</label><p style="padding-left: 120px;height: 20px">'+ row.userBankAccount +'</p></div>'
+                + '<div><label style="float: left">银行开户姓名:</label><p style="padding-left: 120px;height: 20px">'+ row.userBankName +'</p></div>'
+                + '<div><label style="float: left">旺旺号:</label><p style="padding-left: 120px;height: 20px">'+ row.wwID +'</p></div>'
+                + '<div><label style="float: left">封禁原因:</label><p style="padding-left: 120px;height: 20px">'+ row.forbiddenReason +'</p></div>'
+                + '</div>'
+                + '</div>'
+                + '</div>';
+
+            return view;
+        }
+        var height = $(window).width() <= 767 ? $(window).height() - 115 : $(window).height() - 80;
+        var $table =$('#table');
+        $table.bootstrapTable({
+            url: '/seller/seller',
+            striped: true,  //表格显示条纹
+            pagination: true, //启动分页
+            paginationLoop: false, //
+            pageSize: 50,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [50, 100, 200],  //记录数可选列表
+            search: false,  //是否启用查询
+            sortable: false, //是否启用排序
+            showHeader: true, //
+            showRefresh: true,
+            showColumns: true,
+            showFooter: true, //
+            singleSelect: true, //
+            toolbar: '#toolbar', //
+            stickyHeader: true, // 是否固定表头
+            sidePagination: "server", //表示服务端请求
+            queryParamsType: "undefined",// limit or undefined
+            queryParams: function queryParams(params) {   //设置查询参数
+                var param = {
+                    //这里是在ajax发送请求的时候设置一些参数 params有什么东西，自己看看源码就知道了
+                    page: params.pageNumber - 1,
+                    size: params.pageSize,
+                    uid: /*[[${uid}]]*/,
+                    withInvalid: /*[[${withInvalid}]]*/,
+                    inuid: /*[[${inuid}]]*/,
+                    mobilePhone: /*[[${mobilePhone}]]*/,
+                    vipLevel: /*[[${vipLevel}]]*/
+                };
+                return param;
+            },
+            detailView : true,
+            detailFormatter: function (index, row) {
+                var aba = tableDataView(row);
+                return aba;
+            },
+            columns: [
+                {field: 'uid', title: 'ID', align: 'center', valign: 'middle'},
+                {field: 'numberOfTasks', title: '投放任务次数', align: 'center', valign: 'middle'},
+                {field: 'spendTotal', title: '总消费金额(元)', align: 'center', valign: 'middle'},
+                {field: 'numOfStore', title: '店铺数', align: 'center', valign: 'middle'
+                    ,formatter:function(value, row, index) {
+                return '<a href="/store/list?uId='+ row.uid +'">'+value+'</a>'}},
+                {field: 'invitationNum', title: '邀请人数', align: 'center', valign: 'middle'
+                    ,formatter:function(value, row, index) {
+                return '<a href="/seller/sellerlist?inuid='+ row.uid +'">'+value+'</a>'}},
+                {field: 'invitationPrize', title: '邀请奖励金(元)', align: 'center', valign: 'middle'},
+                {field: 'vipLevel', title: 'VIP等级', align: 'center', valign: 'middle',
+                    formatter: function (value, row, index) {
+                        if (value == '1') {
+                            return "普通会员";
+                        }if (value == '2') {
+                            return "<span class='label label-success'>VIP会员</span>"
+                        }
+                        else {
+                            return "<span class='label label-danger'>超级VIP</span>";
+                        }
+                    }
+                },
+                /* {field: 'userType', title: '用户类型', align: 'center', valign: 'middle',
+                     formatter: function (value, row, index) {
+                         if (value == '2') {
+                             return "商家";
+                         } else {
+                             return "试客";
+                         }
+                     }},*/
+                {field: 'userAccount', title: '用户名', align: 'center', valign: 'middle'},
+                /*{field: 'userDegree', title: '平台活跃度', align: 'center', valign: 'middle'},
+                {field: 'userDegree', title: '信誉等级', align: 'center', valign: 'middle'},*/
+                {
+                    field: 'vipEndTime',
+                    title: 'VIP截止日',
+                    align: 'center',
+                    valign: 'middle'
+                },
+                {
+                    field: 'lastLoginTime',
+                    title: '最后登陆日',
+                    align: 'center',
+                    valign: 'middle'
+                },{
+                    field: 'loginIp',
+                    title: '登陆IP',
+                    align: 'center',
+                    valign: 'middle'
+                },
+                {
+                    field: 'forbiddenTime',
+                    title: '禁止登陆时间',
+                    align: 'center',
+                    valign: 'middle'
+                },
+                {
+                    field: 'invalidFlag',
+                    title: '状态',
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: function (value, row, index) {
+                        if (value == '0') {
+                            return "<span class='label label-success'>正常</span>";
+                        } else {
+                            return "<span class='label label-danger'>禁用</span>";
+                        }
+                    }
+                }, {
+                    title: '操作',
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: function (value, row, index) {
+                        if(row.invalidFlag ==0){
+                            return "<button class='btn btn-danger btn-sm' onclick='fengjingAction("+ row.uid +")'>封禁</button>&nbsp;<button class='btn btn-danger btn-sm' onclick='deleteAction()'>delete</button>&nbsp;";
+                        }else{
+                            return "<button class='btn btn-success btn-sm' onclick='jiejingAction()'>解封</button>&nbsp;<button class='btn btn-danger btn-sm' onclick='deleteAction()'>delete</button>";
+                        }
+                    }
+                }
+
+            ]
+        });
+
+        // 充值
+        function updateAction() {
+            var index = $table.find("tr.info").data("index");
+            var selObj = $table.bootstrapTable('getData')[index];
+                if (selObj) {
+                    document.forms["form"].vipLevel.value = selObj.vipLevel;
+                    document.forms["form"].availableDeposit.value = selObj.availableDeposit;
+                    document.forms["form"].sellerFrozenDeposit.value = selObj.sellerFrozenDeposit;
+                    document.forms["form"].standMoney.value = selObj.standMoney;
+                    document.forms["form"].uid.value = selObj.uid;
+                    $('#modalDialog').modal('show');
+                } else {
+                    alert('至少选择一条记录');
+                }
+        }
+
+        // 封禁
+        function fengjingAction(uid){
+
+            BootstrapDialog.show({
+                title: '禁止登录',
+                closable: false,
+                message:
+                '<form id="forbidden-form" action="/seller/datasave" method="post">'
+                + '<input type="hidden" id="uid" name="uid" value="'+ uid +'">'
+                + '<div class="form-group">'
+                + '<label for="forbiddenTime" class="control-label">禁止登录时间:</label>'
+                + '<div>'
+                + '<select class="form-control" id="forbiddenTime" name="forbiddenTime">'
+                + '<option value="3">3天</option>'
+                + '<option value="7">7天</option>'
+                + '<option value="30">一个月</option>'
+                + '<option value="99999">永久</option>'
+                + '</select>'
+                + '</div>'
+                + '<label for="forbiddenReason" class="control-label">禁止登录原因:</label>'
+                + '<div>'
+                + '<textarea class="form-control" id="forbiddenReason" name="forbiddenReason">'
+                + '</textarea>'
+                + '</div>'
+                + '</div>'
+                +'</form>',
+                buttons: [{
+                    label: '取消',
+                    action: function(dialogRef){
+                        dialogRef.close();
+                    }
+                }, {
+                    label: '确定',
+                    action: function(dialogRef){
+                        $("#forbidden-form").submit();
+                    }
+                }]
+            });
+        }
+       /* function fengjingAction() {
+            var index = $table.find("tr.info").data("index");
+            var selObj = $table.bootstrapTable('getData')[index];
+            if (selObj) {
+                document.forms["formf"].forbiddenTime.value = selObj.forbiddenTime;
+                document.forms["formf"].forbiddenReason.value = selObj.forbiddenReason;
+                document.forms["formf"].invalidFlag.value = 1;
+                document.forms["formf"].uid.value = selObj.uid;
+                $('#modalDialogf').modal('show');
+            } else {
+                alert('至少选择一条记录');
+            }
+        }*/
+        $("#formf").validate({
+            focusCleanup: true,
+            focusInvalid: false,
+            onfocusin: function (element) {
+                $("#errContainer").html("");
+            },
+            errorPlacement: function (error, element) {
+                $("#errContainer").html("");
+                $("#errContainer").html($(error).text());
+            },
+            submitHandler: function (form) {
+                $(formf).ajaxSubmit({
+                    success: function (responseText, statusText, xhr, $form) {
+                        var json = $.parseJSON(responseText);
+                        if (json.result == 'success') {
+                            alert('封禁成功！');
+                            window.location.reload();
+                        } else {
+                            alert('封禁失败');
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+        function deleteAction() {
+            var index = $table.find("tr.info").data("index");
+            var selObj = $table.bootstrapTable("getData")[index];
+            if(!selObj){
+                alert("请选择至少一行");
+                return;
+            }else {
+                if (!confirm("您是否确定删除?"))
+                    return;
+                var uid = selObj.uid;
+                $.ajax({
+                    type: "post",
+                    url: '/seller/delete',
+                    data: {uid: uid},
+                    success: function (data) {
+                        if (data == '删除成功') {
+                            alert('删除成功！');
+                            window.location.reload();
+                        } else {
+                            alert(data);
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        }
+       /* function fengjingAction() {
+            var rows = $table.bootstrapTable('getSelections');
+            if(rows.length ==0){
+                alert("请选择至少一行");
+            }else {
+                var uid = rows[0].uid;
+                if(!confirm("是否要禁止该用户？")){
+                    return;
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: '/seller/datasave',
+                    async: true,
+                    data: {uid: uid, invalidFlag: 1},
+                    success: function(data){
+                        alert(data);
+                        window.location.href="/seller/sellerlist";
+                    },
+                    error: function(){console.log("forbid error");alert('操作失败'); window.location.reload();}
+                });
+            }
+        }*/
+
+        // 解封
+        function jiejingAction() {
+            var index = $table.find("tr.info").data("index");
+            var selObj = $table.bootstrapTable('getData')[index];
+            if(!selObj){
+                alert("请选择至少一行");
+            }else {
+                var uid = selObj.uid;
+                if(!confirm("是否要解封该用户？")){
+                    return;
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: '/seller/datasave',
+                    async: true,
+                    data: {uid: uid, invalidFlag: 0},
+                    success: function(data){
+                        alert("解封成功");
+                        window.location.href="/seller/sellerlist";
+                    },
+                    error: function(){console.log("forbid error");alert('操作失败'); window.location.reload();}
+                });
+            }
+        }
+
+        $("#form").validate({
+           /* rules: {
+                className: 'required'
+            },
+            messages: {
+                className: '分类名不能为空'
+            },*/
+            focusCleanup: true,
+            focusInvalid: false,
+            onfocusin: function (element) {
+                $("#errContainer").html("");
+            },
+            errorPlacement: function (error, element) {
+                $("#errContainer").html("");
+                $("#errContainer").html($(error).text());
+            },
+            submitHandler: function (form) {
+                $(form).ajaxSubmit({
+                    success: function (responseText, statusText, xhr, $form) {
+                        var json = $.parseJSON(responseText);
+                        if (json.result == 'success') {
+                            alert('充值成功！');
+                            window.location.reload();
+                        } else {
+                            alert('充值失败');
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

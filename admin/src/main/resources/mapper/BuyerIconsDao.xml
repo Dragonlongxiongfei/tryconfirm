@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.BuyerIconsDao">
+
+    <select id="findAllByPage" parameterType="Map" resultType="com.chenyou.admin.domain.BuyerIcon">
+    SELECT * FROM icon
+    <if test="page != null and page != ''">
+    LIMIT #{page}, #{size}
+    </if>
+    </select>
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(id) FROM icon
+    </select>
+    <select id="findOne" parameterType="long" resultType="com.chenyou.admin.domain.BuyerIcon">
+    SELECT * FROM icon WHERE id = #{id}
+    </select>
+    
+    <update id="updateOne" parameterType="com.chenyou.admin.domain.BuyerIcon">
+    UPDATE icon
+    <set>
+        <if test="iconTitle != null and iconTitle != ''">
+          icon_title = #{iconTitle},
+        </if>
+        <if test="lightImg != null and lightImg != ''">
+          light_img = #{lightImg},
+        </if>
+        <if test="darkImg != null and darkImg != ''">
+          dark_img = #{darkImg},
+        </if>
+        <if test="comment != null and comment != ''">
+          comment = #{comment},
+        </if>
+    </set>
+    WHERE id = #{id}
+    </update>
+
+    <insert id="insertOne" parameterType="com.chenyou.admin.domain.BuyerIcon">
+    INSERT INTO icon(icon_title, light_img, dark_img, comment, add_time, invalid_flag)
+    VALUES (#{iconTitle}, #{lightImg}, #{darkImg}, #{comment}, now(), #{invalidFlag})
+    </insert>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

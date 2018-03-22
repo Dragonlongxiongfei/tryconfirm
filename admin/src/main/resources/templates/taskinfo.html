@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"  layout:decorator="layout">
+<head>
+    <title></title>
+    <link href="/plugins/jquery-step/jquery-step.css" rel="stylesheet"/>
+    <style type="text/css">
+        html input[disabled]{
+            background-color: #ececec;
+        }
+        .form-horizontal .control-group {
+            margin-bottom: 14px;
+        }
+        .heading {
+            border-bottom: 1px solid #dcdcdc;
+            margin-bottom: 18px;
+            padding-bottom: 5px;
+            padding-left: 10px;
+        }
+        .formSep {
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #dcdcdc;
+        }
+        .form-horizontal .control-label {
+            float: left;
+            width: 130px;
+            padding-top: 5px;
+            text-align: right;
+        }
+        .form-horizontal .controls {
+            margin-left: 30px;
+            padding-left: 130px;
+            margin-bottom: 0px;
+        }
+        select {
+            height: auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px;
+            line-height: 20px;
+        }
+        .input_text {
+            height: 24px;
+            padding: 0px 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #555;
+            vertical-align: middle;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            -webkit-transition: border linear .2s, box-shadow linear .2s;
+            -moz-transition: border linear .2s, box-shadow linear .2s;
+            -o-transition: border linear .2s, box-shadow linear .2s;
+            transition: border linear .2s, box-shadow linear .2s;
+        }
+        .form-horizontal .controls span {
+            color: #666;
+            padding-left: 10px;
+        }
+        ul, ol {
+            padding: 0;
+            margin: 0;
+            display: block;
+            list-style: none;
+        }
+        .span30{
+            width: 30%;
+        }
+
+        ol, ul {
+            list-style: none;
+        }
+        .has-error{
+            color: #c73222!important;
+        }
+        .task_process{
+            width: 1160px;
+            font-size: 14px;
+            color: #666;
+            padding: 0 20px;
+            border-bottom: 1px solid #ccc;
+            height: 70px;
+            line-height: 70px;
+            margin-bottom: 30px;
+        }
+        .task_process span{
+            color: #D00;
+            font-size: 30px;
+            font-weight: bold;
+            padding-right: 5px;
+        }
+        .task_steps {
+            width: 1158px;
+            margin-left: 20px;
+            border-bottom: 1px dashed #999;
+            overflow: hidden;
+            display: block;
+            padding-bottom: 30px;
+        }
+        .task_steps ul{
+            margin-left: 4px;
+            overflow: hidden;
+        }
+        .task_steps ul li{
+            float: left;
+            line-height: 60px;
+            font-size: 18px;
+            list-style: none;
+        }
+        .task_steps .active_li {
+            width: 150px;
+            height: 60px;
+            text-align: center;
+            background: #01ba3c;
+            color: #fff;
+            border-radius: 6px;
+        }
+        .task_steps .no_active_li {
+            width: 150px;
+            height: 60px;
+            text-align: center;
+            background: #aaa;
+            color: #fff;
+            border-radius: 6px;
+        }
+        .task_steps .active_gt{
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            color: #01ba3c;
+        }
+        .task_steps .no_active_gt{
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            color: #999;
+        }
+    </style>
+
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" layout:fragment="content">
+    <section class="content-header">
+        <h1 id="pageTitle">试客-任务详情</h1>
+    </section>
+    <section class="content">
+        <form id="tf" class="form-horizontal" th:method="post">
+            <div id="jquery-tabs">
+                <!-- 任务基本信息start -->
+                <h3>任务基本信息</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <div class="task_process"><span>试用进展</span>当前试客任务进展！</div>
+                        <div class="task_steps">
+                            <ul>
+                                <li id="status1" class="no_active_li">申请试用</li>
+                                <li id="gt2" class="no_active_gt">&gt;</li>
+                                <li id="status2" class="no_active_li">审核试客</li>
+                                <li id="gt3" class="no_active_gt">&gt;</li>
+                                <li id="status3" class="no_active_li">下单付款</li>
+                                <li id="gt4" class="no_active_gt">&gt;</li>
+                                <li id="status4" class="no_active_li">收货好评</li>
+                                <li id="gt5" class="no_active_gt">&gt;</li>
+                                <li id="status5" class="no_active_li">平台返款</li>
+                                <li id="gt6" class="no_active_gt">&gt;</li>
+                                <li id="status6" class="no_active_li">完成任务</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">用户</label>
+                        <div class="controls">
+                            <input class="input_text" th:value="${buyerTaskVO.uid + '-' + buyerTaskVO.userAccount}" />（uid-用户账号）
+                            <input type="hidden" id="taskID" th:value="${buyerTaskVO.taskID}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">卖家</label>
+                        <div class="controls">
+                            <input class="input_text" th:value="${buyerTaskVO.sellerUid + '-' + buyerTaskVO.sellerName}" />（uid-卖家名）
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">用户输入链接</label>
+                        <div class="controls">
+                            <textarea cols="100" rows="4" th:text="${buyerTaskVO.goodsUrl}" />
+                        </div>
+                    </div>
+                </section>
+                <!-- 任务基本信息end -->
+
+                <!-- 店铺、商品收藏截图start -->
+                <h3>店铺|商品收藏审核</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">商品名称</label>
+                        <div class="controls">
+                            <input class="input_text" style="min-width: 400px;" th:value="${buyerTaskVO.goodsName}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">商品收藏截图</label>
+                        <div class="controls">
+                            <img alt="商品收藏截图" th:src="${buyerTaskVO.goodsCollectionImg}"/>
+                        </div>
+                    </div>
+                    <!--<div class="control-group formSep">-->
+                        <!--<label class="control-label">店铺名称</label>-->
+                        <!--<div class="controls">-->
+                            <!--<input class="input_text" style="min-width: 400px;" th:value="${buyerTaskVO.shopName}" />-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="control-group formSep">
+                        <label class="control-label">店铺收藏截图</label>
+                        <div class="controls">
+                            <img alt="店铺收藏截图" th:src="${buyerTaskVO.shopCollectionImg}"/>
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">审核收藏截图:</label>
+                        <div class="controls">
+                            <button class="btn btn-default">通过</button>
+                        </div>
+                    </div>
+                </section>
+                <!-- 店铺、商品收藏截图end -->
+
+                <!-- 浏览店铺4个链接start -->
+                <h3>浏览店铺4个url</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">店铺商品链接1:</label>
+                        <div class="controls">
+                            <input name="receiverAddress" style="min-width: 400px;" class="input_text" placeholder="店铺商品链接1" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">店铺商品链接2:</label>
+                        <div class="controls">
+                            <input name="receiverAddress" style="min-width: 400px;" class="input_text" placeholder="店铺商品链接2" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">店铺商品链接3:</label>
+                        <div class="controls">
+                            <input name="receiverAddress" style="min-width: 400px;" class="input_text" placeholder="店铺商品链接3" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">店铺商品链接4:</label>
+                        <div class="controls">
+                            <input name="receiverAddress" style="min-width: 400px;" class="input_text" placeholder="店铺商品链接4" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">审核链接:</label>
+                        <div class="controls">
+                            <button class="btn btn-default">通过</button>
+                        </div>
+                    </div>
+                </section>
+                <!-- 浏览店铺4个链接end -->
+
+                <!-- 订单信息start -->
+                <h3>订单信息</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">订单号:</label>
+                        <div class="controls">
+                            <input class="input_text" style="min-width: 400px;" th:value="${buyerTaskVO.tradeNo}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">订单号截图:</label>
+                        <div class="controls">
+                            <img alt="订单号截图" th:src="${buyerTaskVO.tradeImg}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">实际支付金额:</label>
+                        <div class="controls">
+                            <input class="input_text" style="min-width: 400px;" th:value="${buyerTaskVO.tradeMoney}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">客服聊天截图:</label>
+                        <div class="controls">
+                            <img alt="客服聊天截图" th:src="${buyerTaskVO.talkImg}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">商品评论:</label>
+                        <div class="controls">
+                            <input class="input_text" style="min-width: 400px;" th:value="${buyerTaskVO.goodsComment}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">商品评论截图:</label>
+                        <div class="controls">
+                            <img alt="商品评论截图" th:src="${buyerTaskVO.commentImg}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">最终审核:</label>
+                        <div class="controls">
+                            <button class="btn btn-default">通过</button>
+                        </div>
+                    </div>
+
+                </section>
+                <!-- 订单信息end -->
+
+                <!-- 其他信息start -->
+                <h3>其他信息</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">放弃原因:</label>
+                        <div class="controls">
+                            <input class="input_text" style="min-width: 400px;" th:value="${buyerTaskVO.giveUpReason}" />
+                        </div>
+                    </div>
+                </section>
+                <!-- 其他信息end -->
+            </div>
+            <!-- 提交按钮 -->
+        </form>
+    </section>
+</div>
+
+<div style="display: none;" layout:fragment="script">
+    <!-- form validate -->
+    <script src="https://cdn.bootcss.com/jquery-validate/1.16.0/jquery.validate.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.js"></script>
+    <script src="/plugins/jquery-step/jquery-step.js"></script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+        $("#jquery-tabs").steps({
+            headerTag: "h3",
+            bodyTag: "section",
+            transitionEffect: "slideLeft",
+            enableFinishButton: false,
+            enablePagination: false,
+            enableAllSteps: true,
+            titleTemplate: "#title#",
+            cssClass: "tabcontrol"
+        });
+
+        $("").datepicker({
+            language : 'zh-CN',
+            todayBtn: "linked",
+            clearBtn: true,// 自定义属性,true 显示 清空按钮 false 隐藏 默认:true
+            format: "yyyy-mm-dd",
+            keyboardNavigation: true,
+            forceParse: false,
+            calendarWeeks: false,
+            autoclose: true
+        });
+
+
+        /*]]>*/
+    </script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+        var renderTaskStep = function (status){
+            var stepLi = $(".task_steps ul li");
+            stepLi.each(function(index, ele){
+                if (ele.id.indexOf("gt") >= 0){
+                    var idNumber = ele.id.substring(2, 3);
+                    if (idNumber <= status) {
+                        $(ele).removeClass("no_active_gt").addClass("active_gt");
+                    }
+                }
+                if (ele.id.indexOf("status") >= 0) {
+                    var idNumber = ele.id.substring(6, 7);
+                    if(idNumber <= status){
+                        $(ele).removeClass("no_active_li").addClass("active_li");
+                    }
+                }
+            });
+        };
+
+        var setPageValue = function (data) {
+            if (!data){
+                return ;
+            }
+
+
+        };
+
+        var viewContext = {
+            contextValue: {},
+            initView: function(){
+                var taskVo = this.contextValue;
+                if(!taskVo){
+                    return ;
+                }
+                renderTaskStep(taskVo.taskStatus);
+                setPageValue(taskVo);
+
+            },
+            setContextValue: function(data){
+                this.contextValue = data;
+            },
+            showContextValue: function(){
+                console.log(this.contextValue);
+            }
+        };
+
+        viewContext.setContextValue(/*[[${buyerTaskVO}]]*/);
+        viewContext.showContextValue();
+        viewContext.initView();
+        /** page  bind events follows **/
+
+
+
+
+
+
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.GdGoodsDao">
+  <sql id="BASE_RESULT">
+    goods_id AS goodsId,
+    uid AS uid,
+    goods_name AS goodsName,
+    goods_title AS goodsTitle,
+    goods_price AS  goodsPrice,
+    goods_discount AS goodsDiscount,
+    goods_num AS goodsNum,
+	exchange_num AS exchangeNum,
+	prize_num AS prizeNum,
+    exchanged_num AS exchangedNum,
+    apply_num AS applyNum,
+    prize_limit AS prizeLimit,
+	size AS productsize,
+    goods_img AS goodsImg,
+    goods_comment AS goodsComment,
+    search_result_img AS  searchResultImg,
+    free_mail AS freeMail,
+    coins_price AS  coninsPrice,
+    new_flag AS newFlag,
+    store_id AS storeId,
+    store_name AS storeName,
+    pass_flag AS passFlag,
+    platform AS  platform,
+    goods_url AS goodsUrl,
+    goods_ra_code AS  goodsRaCode,
+    nature_search AS  natureSearch,
+    search_keywords AS searchKeywords,
+    search_class AS  searchClass,
+    high_value_flag AS highValueFlag,
+    mail_insurance_flag AS mailInsuranceFlag,
+    pay_by_arrived AS  payByArrived,
+    overseas_flag AS overSeasFlag,
+    second_hand_flag AS  secondHandFlag,
+    tianmao_flag AS  tianmaoFlag,
+    genuine_insurance_flag AS genuineInsuranceFlag,
+    send_in_24_hours_flag AS sendInHoursFlag,
+    returns_in_7_days_flag AS  returnInDaysFlag,
+    wangwang_online_flag AS wangwangOnlineFlag,
+    terminal_type AS  terminalType,
+    credit_card_flag AS creditCardFlag,
+    huabei_flag AS huabeiFlag,
+    coins_return AS coinsReturn,
+    cash_return AS cashReturn,
+    price_range AS priceRange,
+    send_area AS  sendArea,
+    limit_per_day AS limitPerDay,
+    suggest_flag AS suggestFlag,
+    coup_support_flag AS  coupSupportFlag,
+    upload_nice_comment_flag AS uploadNiceCommentFlag,
+    pay_command AS  payCommand,
+    goods_class_pid AS goodsClasspId,
+    goods_class_sid AS goodsClasssId,
+    goods_order AS goodsOrder,
+	yanchang_zhouqi AS yanchangZhouqi,
+    exact_flag AS exactFlag,
+    limit_per_day AS limitPerDay,
+    xishi_man AS xishiMan,
+    xishi_flag AS xishiFlag,
+    yajin_return_flag AS yajinReturnFlag,
+    guanjianci AS guanjianci,
+    guanjianci_flag AS guanjianciFlag,
+    keywords_num AS keywordsNum,
+    haoping_flag AS haopingFlag,
+    tuwen_flag AS tuwenFlag,
+    jiashang_count AS jiashangCount,
+    jiashang_flag AS jiashangFlag,
+    pre_pass_flag AS prePassFlag,
+    seller_require AS sellerRequire,
+    zhenrenxiu_flag AS zhenrenxiuFlag,
+    haopingshu AS coinsPrice,
+    zhenrenxiushu AS zhenrenxiushu,
+    xiaoshipin_flag AS xiaoshipinFlag,
+    jietu_key_flag AS jietuKeyFlag,
+    xiangqing_answer_flag AS xiangqingAnswerFlag,
+    zhima_flag AS zhimaFlag,
+    taoqi_flag AS taoqiFlag,
+    lunbo_flag AS lunboFlag,
+    xiaoshipinshu AS xiaoshipinshu,
+	goods_like  AS goodsLike,
+	pay_flag AS payFlag,
+    stop_flag AS stopFlag,
+    unpass_reason AS unpassReason,
+    all_money AS allMoney,
+    jinbi AS jinbi,
+    danbao_money AS danbaoMoney,
+    DATE_FORMAT(add_time, '%Y-%m-%d')  AS addTime,
+    invalid_flag AS invalidFlag
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="long" resultType="com.chenyou.admin.domain.GdGoods">
+    SELECT <include refid="BASE_RESULT"/>
+    FROM
+    gd_goods
+    WHERE goods_id = #{gid}
+  </select>
+
+  <select id="selectByStatus" parameterType="Map" resultType="com.chenyou.admin.domain.GdGoods">
+    SELECT <include refid="BASE_RESULT"/>
+    FROM gd_goods
+    WHERE invalid_flag  = 0 AND pass_flag>=1
+    <if test="goodsName !=null and goodsName !=''">
+      AND goods_name LIKE "%"#{goodsName}"%"
+    </if>
+    <if test="terminalType !=null and terminalType !=''">
+      AND terminal_type = #{terminalType}
+    </if>
+    <if test="withInvalid !=null and withInvalid !=''">
+      OR invalid_flag IN <![CDATA[${withInvalid}]]>
+    </if>
+    <if test="goodsId !=null and goodsId !=''">
+      AND goods_id = #{goodsId}
+    </if>
+    <if test="platform !=null and platform !=''">
+      AND platform IN <![CDATA[${platform}]]>
+    </if>
+    <if test="uid !=null and uid !=''">
+      AND  uid = #{uid}
+    </if>
+    ORDER by ${sortName} ${sortOrder}
+    <if test="page != null">
+      LIMIT #{page}, #{size}
+    </if>
+  </select>
+
+  <select id="getUncheckTotal" parameterType="Map" resultType="int">
+    SELECT count(goods_id)
+    FROM gd_goods
+    WHERE invalid_flag  = 0 AND pass_flag>=1
+    <if test="goodsName !=null and goodsName !=''">
+      AND goods_name LIKE "%"#{goodsName}"%"
+    </if>
+    <if test="terminalType !=null and terminalType !=''">
+      AND terminal_type = #{terminalType}
+    </if>
+    <if test="withInvalid !=null and withInvalid !=''">
+      OR invalid_flag IN <![CDATA[${withInvalid}]]>
+    </if>
+    <if test="goodsId !=null and goodsId !=''">
+    AND goods_id = #{goodsId}
+    </if>
+    <if test="uid !=null and uid !=''">
+      AND  uid = #{uid}
+    </if>
+  </select>
+
+  <select id="selectCheck" parameterType="Map" resultType="com.chenyou.admin.domain.GdGoods">
+    SELECT <include refid="BASE_RESULT"/>
+    FROM gd_goods
+    WHERE invalid_flag  = 0 AND pass_flag = 0
+    <if test="goodsName != null and goodsName != ''">
+      AND goods_name LIKE "%"#{goodsName}"%"
+    </if>
+    <if test="goodsId !=null and goodsId !=''">
+      AND goods_id = #{goodsId}
+    </if>
+    <if test="uid !=null and uid !=''">
+      AND  uid = #{uid}
+    </if>
+    <if test="terminalType !=null and terminalType !=''">
+      AND terminal_type = #{terminalType}
+    </if>
+    <if test="platform !=null and platform !=''">
+      AND platform IN <![CDATA[${platform}]]>
+    </if>
+    <if test="withInvalid !=null and withInvalid !=''">
+      OR invalid_flag IN <![CDATA[${withInvalid}]]>
+    </if>
+    ORDER by ${sortName} ${sortOrder}
+    <if test="page != null">
+      LIMIT #{page}, #{size}
+    </if>
+  </select>
+
+  <select id="getcheckTotal" parameterType="Map" resultType="int">
+    SELECT count(goods_id)
+    FROM gd_goods
+    WHERE invalid_flag  = 0 AND pass_flag = 0
+    <if test="goodsName !=null and goodsName !=''">
+      AND goods_name LIKE "%"#{goodsName}"%"
+    </if>
+    <if test="goodsId !=null and goodsId !=''">
+      AND goods_id = #{goodsId}
+    </if>
+    <if test="uid !=null and uid !=''">
+      AND  uid = #{uid}
+    </if>
+    <if test="terminalType !=null and terminalType !=''">
+      AND terminal_type = #{terminalType}
+    </if>
+    <if test="withInvalid !=null and withInvalid !=''">
+      OR invalid_flag IN <![CDATA[${withInvalid}]]>
+    </if>
+  </select>
+
+  <update id="updateStatus" parameterType="Map">
+    UPDATE gd_goods
+    SET pass_flag =  #{passFlag}
+    <if test="unpassReason != null and unpassReason != ''">
+      ,unpass_reason =  #{unpassReason}
+    </if>
+    WHERE
+    goods_id = #{gid}
+  </update>
+  <update id="updateGoodsCommentById" parameterType="com.chenyou.admin.domain.GdGoods">
+    update gd_goods
+    <set>
+      <if test="goodsComment != null">
+        goods_comment = #{goodsComment,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateGoodsById" parameterType="com.chenyou.admin.domain.GdGoods">
+    update gd_goods
+    <set>
+      <if test="goodsName != null">
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsOrder != null">
+        goods_order = #{goodsOrder},
+      </if>
+      <if test="prizeNum != null">
+        prize_num = #{prizeNum},
+      </if>
+      <if test="applyNum != null">
+        apply_num = #{applyNum},
+      </if>
+      <if test="goodsNum != null">
+        goods_num = #{goodsNum},
+      </if>
+      <if test="storeName != null">
+        store_name = #{storeName},
+      </if>
+      <if test="platform != null">
+        platform = #{platform},
+      </if>
+      <if test="invalidFlag != null">
+        invalid_flag = #{invalidFlag}
+      </if>
+      <if test="searchResultImg != null">
+        search_result_img = #{searchResultImg}
+      </if>
+    </set>
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+  </update>
+  <delete id="deleteByPrimaryKey" parameterType="long">
+    DELETE FROM gd_goods WHERE goods_id = #{gid}
+  </delete>
+
+  <select id="findAllPagable" resultType="com.chenyou.admin.domain.GdGoods">
+    SELECT
+    <include refid="BASE_RESULT"/>
+    FROM gd_goods
+    WHERE
+      invalid_flag  = 0 AND pass_flag = 0 AND stop_flag = 0
+    LIMIT #{page}, #{pageSize}
+  </select>
+
+  <select id="updatePrizeNum" parameterType="int">
+    UPDATE gd_goods
+    <set>
+      prize_num = prize_num + #{prizeNum}
+    </set>
+    WHERE goods_id = #{goodsID}
+  </select>
+
+  <insert id="insertGdPrizeNum">
+    INSERT INTO gd_prize_num(goods_id, lottery_num, add_time)
+    VALUES (#{goodsId}, #{luckNum}, DATE_FORMAT(NOW(),'%Y-%m-%d'))
+  </insert>
+
+  <select id="getLastLotteryNum" parameterType="long" resultType="int">
+    SELECT lottery_num FROM gd_prize_num WHERE goods_id = #{goodsId}
+  </select>
+
+  <delete id="truncatePrizeNumTable">
+    TRUNCATE gd_prize_num
+  </delete>
+</mapper>

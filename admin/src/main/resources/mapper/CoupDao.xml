@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.CoupDao">
+
+    <select id="findAllByPage" parameterType="Map" resultType="com.chenyou.admin.domain.Coup">
+      SELECT * FROM coup
+      <if test="page != null and page != ''">
+      LIMIT #{page}, #{size}
+      </if>
+    </select>
+    <select id="findTotal" parameterType="Map" resultType="int">
+      SELECT COUNT(id) FROM coup
+    </select>
+    <select id="findOne" parameterType="long" resultType="com.chenyou.admin.domain.Coup">
+      SELECT * FROM coup WHERE id = #{id}
+    </select>
+    <update id="updateOne" parameterType="com.chenyou.admin.domain.Coup">
+      UPDATE coup
+    <set>
+        <if test="coupTitle != null and coupTitle != ''">
+        coup_title = #{coupTitle},
+        </if>
+        <if test="coupMoney != null and coupMoney != ''">
+        coup_money = #{coupMoney},
+        </if>
+        <if test="coupNum != null and coupNum != ''">
+        coup_num = #{coupNum},
+        </if>
+        <if test="coupUsed != null and coupUsed != ''">
+        coup_used = #{coupUsed},
+        </if>
+        <if test="coupCondition != null and coupCondition != ''">
+        coup_condition = #{coupCondition},
+        </if>
+        <if test="coupDesc != null and coupDesc != ''">
+        coup_desc = #{coupDesc},
+        </if>
+        <if test="coupTimeLimit != null and coupTimeLimit != ''">
+        coup_time_limit = #{coupTimeLimit},
+        </if>
+        <if test="invalidFlag != null">
+        invalid_flag = #{invalidFlag},
+        </if>
+    </set>
+      WHERE
+        id = #{id}
+    </update>
+    <insert id="insertOne" parameterType="com.chenyou.admin.domain.Coup">
+      INSERT INTO coup(coup_title, coup_money, coup_num, coup_used, coup_condition, coup_lock, coup_desc, coup_time_limit, add_time, invalid_flag)
+      VALUES(#{coupTitle}, #{coupMoney}, #{coupNum}, #{coupUsed}, #{coupCondition}, #{coupLock}, #{coupDesc}, #{coupTimeLimit},
+      now(), #{invalidFlag})
+    </insert>
+</mapper>

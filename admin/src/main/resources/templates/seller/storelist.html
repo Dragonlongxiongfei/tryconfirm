@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout">
+<head>
+    <title>商铺管理</title>
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" layout:fragment="content" id = "mainContent">
+    <section class="content-header">
+        <h1>商铺管理</h1>
+    </section>
+    <section class="content">
+        <div class="col-md-12 form-group">
+            <form th:action="${'/store/list'}" method="post">
+                店铺ID:<input id="storeId" name="storeId" th:value="${storeId}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="店铺ID" />
+                商家ID:<input id="" name="uId" th:value="${uId}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="商家ID" />
+
+                <label>
+                    <input type="checkbox" name="with-invalid" th:value="1" th:checked="${withInvalid eq '1'}" /> 包含无效
+                </label>
+
+                <button class="btn btn-default" style="vertical-align: top;" type="submit" title="查询">
+                    <i class="glyphicon glyphicon-search icon-search"></i>
+                </button>
+            </form>
+        </div>
+        <!--<div id="toolbar" class="btn-group">
+            <button id="btn_add" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-add" aria-hidden="true"></span>增加
+            </button>
+            <button id="btn_edit" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
+            </button>
+        </div>-->
+        <div style="margin-bottom:10px;">
+            <!-- <button id="btn_add" type="button" class="btn btn-default">
+                 <span class="glyphicon glyphicon-add" aria-hidden="false">增加</span>
+             </button>-->
+            <button id="btn_del" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-add" aria-hidden="true">删除</span>
+            </button>
+        </div>
+        <table id="table" class="table" style="word-break:break-all; "></table>
+    </section>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="modalDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/authority/managesave}" method="post" role="form" id="form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="dialogTitle">编辑</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" placeholder="登录帐号" name="manAccount"/>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <input type="password" class="form-control" placeholder="不修改密码则不填" name="manPasswd"/>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" placeholder="管理员名称" name="manName"/>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group has-feedback text-center">
+                                    <input type="radio" id="manStatus1" value="Y" name="manStatus"/>
+                                    <label for="manStatus1"> 正常 </label>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group has-feedback text-center">
+                                    <input type="radio" id="manStatus2" value="N" name="manStatus"/>
+                                    <label for="manStatus1"> 禁用 </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <span id="errContainer" style="color:red;"/>
+                            <input type="hidden" id="manId" name="manId"/>
+                            <input type="hidden" id="manVersion" name="manVersion"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">确认</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
+<div style="display: none;" layout:fragment="script">
+    <!-- form validate -->
+    <script src="https://cdn.bootcss.com/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-validate/1.16.0/jquery.validate.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.js"></script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+        var height = $(window).width() <= 767 ? $(window).height() - 115 : $(window).height() - 80;
+        var $table =$('#table');
+        $table.bootstrapTable({
+            url: '/store/data',
+            striped: true,  //表格显示条纹
+            pagination: true, //启动分页
+            paginationLoop: false, //
+            pageSize: 50,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [50, 100, 200],  //记录数可选列表
+            search: false,  //是否启用查询
+            sortable: true, //是否启用排序
+            showHeader: true, //
+            showFooter: true, //
+            showRefresh: true,
+            showColumns: true,
+            singleSelect: true, //
+            toolbar: '#toolbar', //
+            stickyHeader: true, // 是否固定表头
+            sidePagination: "server", //表示服务端请求
+           /* detailView : true,
+            detailFormatter:  function (index, row) {
+                var aba = tableDataView(row);
+                return aba;
+            },*/
+            queryParamsType: "undefined",// limit or undefined
+            queryParams: function queryParams(params) {   //设置查询参数
+                var param = {
+                    //这里是在ajax发送请求的时候设置一些参数 params有什么东西，自己看看源码就知道了
+                    page: params.pageNumber - 1,
+                    size: params.pageSize,
+                    storeId: /*[[${storeId}]]*/,
+                    uId: /*[[${uId}]]*/,
+                    withInvalid: /*[[${withInvalid}]]*/
+                };
+                return param;
+            },
+            columns: [
+//                {checkbox: true, align: 'center', valign: 'middle'},
+                {field: 'storeId', title: 'ID', align: 'center', valign: 'middle'},
+                {field: 'uId', title: '关联的商家Id', align: 'center', valign: 'middle'
+                ,formatter:function(value,row,index){
+                    return '<a href="/seller/sellerlist?uid='+ row.uId +'&&withInvalid=1'+'">'+value+'</a>';
+                }},
+                {field: 'storeName', title: '店铺名称', align: 'center', valign: 'middle'},
+                {field: 'storeUrl', title: '店铺主页', align: 'center', valign: 'middle',
+                    formatter:function(value, row, index){
+                        return "<a target='_blank' href="+row.storeUrl+" >商铺主页</a>"
+                    }
+                },
+                {field: 'platform', title: '店铺平台', align: 'center', valign: 'middle'},
+                {field: 'xinyu', title: '淘宝/天猫信誉', align: 'center', valign: 'middle',
+                    formatter:function (value, row, index) {
+                        return "<img src=https://"+row.xinyu+" />";
+                    }
+
+                },
+                /*{field: 'jindongXinyu', title: '京东几年', align: 'center', valign: 'middle'},*/
+                {field: 'categoryId', title: '分类ID', align: 'center', valign: 'middle'
+                    ,formatter:function(value,row,index){
+                    return '<a href="/gdclass/list?cId='+ row.categoryId +'&&with_Invalid=1'+'">'+value+'</a>';
+                }},
+                {field: 'storeQQ', title: '店铺联系人QQ', align: 'center', valign: 'middle'},
+                {field: 'storeWeixin', title: '微信', align: 'center', valign: 'middle'},
+                {field: 'storePhone', title: '电话', align: 'center', valign: 'middle'},
+                {
+                    field: 'addTime',
+                    title: '提交时间',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true
+                },
+                {
+                    field: 'invalidFlag',
+                    title: '状态',
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: function (value, row, index) {
+                        if (value == '0') {
+                            return "<span class='label label-success'>有效</span>";
+                        }
+                        if (value == '1') {
+                            return "<span class='label label-danger'>无效</span>";
+                        }
+                    }
+                }
+            ]
+        });
+        $('#btn_add').click(function () {
+            $("#dialogTitle").val( "新增");
+            $('#modalDialog').modal('show');
+        });
+        $('#btn_del').click(function() {
+            var index = $("#table").find("tr.info").data("index");
+            var selObj = $("#table").bootstrapTable('getData')[index];
+            if (!selObj) {
+                alert("请选择一条记录");
+                return;
+            }
+            if (!confirm("确认删除该商铺?"))
+                return;
+            var storeId = selObj.storeId;
+            var uid = selObj.uId;
+            $.ajax({
+                type: "post",
+                url: '/store/update',
+                data: {storeId: storeId,uid:uid},
+                success: function (data) {
+                        alert(data);
+                        window.location.reload();
+                }
+                /*,
+                error: function(){
+                    console.log("del store error")
+                    alert("删除失败");
+                    window.location.reload();
+                }*/
+            });
+//            document.forms["tf"].id.value = selObj.goodsId;
+//            document.forms["tf"].goodsName.value = selObj.goodsName;
+//
+//            document.forms["tf"].goodsOrder.value = selObj.goodsOrder;
+//            document.forms["tf"].invalidFlag.value = selObj.invalidFlag;
+//            $("#dialogTitle").text("编辑");
+//            $('#modalDialog').modal({backdrop: 'static', keyboard: false, show: true});
+        });
+        $('#btn_edit').click(function () {
+            var selObj = $('#table').bootstrapTable('getSelections');
+            if (selObj.length > 0) {
+                var row = selObj[0];
+                document.forms["form"].roleId.value = row.roleId;
+                document.forms["form"].roleName.value = row.roleName;
+                document.forms["form"].roleVersion.value = row.roleVersion;
+                $('#authSelector').multiSelect('select', row.roleAuths.split(","));
+                $('#modalDialog').modal('show');
+            } else {
+                alert('至少选择一条记录');
+            }
+        });
+        $("#form").validate({
+            rules: {
+                roleName: 'required'
+            },
+            messages: {
+                roleName: '角色名不能空'
+            },
+            focusCleanup: true,
+            focusInvalid: false,
+            onfocusin: function (element) {
+                $("#errContainer").html("");
+            },
+            errorPlacement: function (error, element) {
+                $("#errContainer").html("");
+                $("#errContainer").html($(error).text());
+            },
+            submitHandler: function (form) {
+                $(form).ajaxSubmit({
+                    success: function (responseText, statusText, xhr, $form) {
+                        var json = $.parseJSON(responseText);
+                        if (json.result == 'success') {
+                            window.location.reload();
+                        } else {
+                            alert(responseText);
+                        }
+                    }
+                });
+            }
+        });
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

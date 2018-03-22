@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.BuyAccountDao">
+
+    <select id="getAllByPage" parameterType="Map" resultType="com.chenyou.admin.domain.BuyAccount">
+    SELECT
+        id AS id,
+        uid AS uid,
+        user_account AS userAccount,
+        buy_account AS buyAccount,
+        platform_id AS platformID,
+        platform_name AS platformName,
+        account_level AS accountLevel,
+        account_img AS accountImg,
+        comment AS comment,
+        refuse_comment AS refuseComment,
+        bstatus AS bstatus,
+        add_time AS addTime,
+        invalid_flag AS invalidFlag
+    FROM
+        buy_account b
+    WHERE
+        invalid_flag = 0
+        <if test="page != null and page != ''">
+        LIMIT #{page}, #{size}
+        </if>
+        ORDER BY id DESC
+    </select>
+    <select id="getTotal" resultType="int">
+    SELECT count(id) FROM buy_account
+    WHERE
+        invalid_flag = 0
+    </select>
+
+    <select id="findOne" parameterType="long" resultType="com.chenyou.admin.domain.BuyAccount">
+        SELECT
+            id AS id,
+            uid AS uid,
+            user_account AS userAccount,
+            buy_account AS buyAccount,
+            platform_id AS platformID,
+            platform_name AS platformName,
+            account_level AS accountLevel,
+            account_img AS accountImg,
+            comment AS comment,
+            refuse_comment AS refuseComment,
+            bstatus AS bstatus,
+            add_time AS addTime,
+            invalid_flag AS invalidFlag
+        FROM
+            buy_account
+        WHERE
+            id = #{id}
+    </select>
+
+    <update id="updateOne" parameterType="Map">
+      UPDATE
+        buy_account
+      SET bstatus = #{bstatus}
+      <if test="comment != null and comment != ''">
+          ,comment = #{comment}
+      </if>
+      <if test="refuseComment != null and refuseComment != ''">
+          ,refuse_comment = #{refuseComment}
+      </if>
+      WHERE id = #{id}
+    </update>
+
+
+
+</mapper>

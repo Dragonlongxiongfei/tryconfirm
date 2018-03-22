@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.SellerVipDao">
+
+    <sql id="BaseSelect">
+        vip_id AS vipId,
+        vip_title AS vipTitle,
+        vip_type AS vipType,
+        vip_price AS vipPrice,
+        basic_price AS basicPrice,
+        discount AS discount,
+        send_time AS sendTime,
+        DATE_FORMAT(add_time, '%Y-%m-%d') AS addTime,
+        icon AS icon,
+        svip AS svip,
+        invalid_flag AS invalidFlag,
+        more_specical AS moreSpecical
+    </sql>
+
+    <select id="page" parameterType="Map" resultType="com.chenyou.admin.domain.SellerVip">
+        SELECT <include refid="BaseSelect"/>
+        FROM
+          seller_vip
+        WHERE
+         invalid_flag = 0
+        <!--<if test="withInvalid != null and withInvalid != ''">
+            OR invalid_flag = #{withInvalid}
+        </if>-->
+       <!-- <if test="qq != null and qq != ''">
+            and qq = #{qq}
+        </if>
+        <if test="realName != null and realName != ''">
+          and real_name LIKE "%"#{realName}"%"
+        </if>
+        <if test="userAccount != null and userAccount != ''">
+          and user_account = #{userAccount}
+        </if>
+        <if test="wwID != null and wwID != ''">
+          and ww_id = #{wwID}
+        </if>
+        <if test="sex != null and sex != ''">
+            and sex IN <![CDATA[${sex}]]>
+        </if>-->
+        ORDER BY vip_id DESC
+        <if test="page != null">
+          LIMIT #{page}, #{size}
+        </if>
+    </select>
+    <select id="findOne" parameterType="long" resultType="com.chenyou.admin.domain.SellerVip">
+        SELECT <include refid="BaseSelect"/>
+        FROM seller_vip
+        WHERE vip_id = #{vipId}
+    </select>
+
+    <select id="getAllCount" parameterType="Map" resultType="int">
+        SELECT count(vip_id) FROM seller_vip
+        WHERE
+        invalid_flag = 0
+        <!--<if test="withInvalid != null and withInvalid != ''">
+            OR invalid_flag = #{withInvalid}
+        </if>
+        <if test="qq != null and qq != ''">
+            and qq = #{qq}
+        </if>
+        <if test="realName != null and realName != ''">
+            and real_name LIKE "%"#{realName}"%"
+        </if>
+        <if test="userAccount != null and userAccount != ''">
+            and user_account = #{userAccount}
+        </if>
+        <if test="wwID != null and wwID != ''">
+            and ww_id = #{wwID}
+        </if>
+        <if test="sex != null and sex != ''">
+            and sex IN  <![CDATA[${sex}]]>
+        </if>-->
+    </select>
+   <!-- <update id="updateBuyer" parameterType="com.chenyou.admin.domain.SysUserBuyer">
+    UPDATE sys_user
+    SET
+        <if test="forbiddenTime != null and forbiddenTime != ''">
+        forbidden_time = #{forbiddenTime},
+        </if>
+        invalid_flag = #{invalidFlag}
+    WHERE
+      uid = #{uid}
+    </update>-->
+    <insert id="insert" parameterType="com.chenyou.admin.domain.SellerVip">
+        INSERT
+        into seller_vip(vip_price, vip_title,vip_type,add_time,more_specical,send_time)
+        VALUES(#{vipPrice}, #{vipTitle}, #{vipType},#{addTime},#{moreSpecical},#{sendTime})
+        <!--<if test="className!=null">
+
+        </if>-->
+    </insert>
+
+    <update id="update" parameterType="com.chenyou.admin.domain.SellerVip">
+        UPDATE
+        seller_vip SET
+        <if test="vipPrice!=null">
+            vip_price = #{vipPrice}
+        </if>
+        <if test="vipTitle!=null">
+            ,vip_title = #{vipTitle}
+        </if>
+        <if test="vipType!=null">
+            ,vip_type = #{vipType}
+        </if>
+        <if test="sendTime!=null">
+            ,send_time = #{sendTime}
+        </if>
+        <if test="moreSpecical!=null">
+            ,more_specical = #{moreSpecical}
+        </if>
+        WHERE vip_id = #{vipId}
+    </update>
+
+
+</mapper>

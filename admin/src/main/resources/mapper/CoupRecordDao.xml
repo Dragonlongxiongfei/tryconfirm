@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.CoupRecordDao">
+
+    <insert id="insertOne" parameterType="com.chenyou.admin.domain.CoupRecord">
+    INSERT INTO coup_record(uid, coup_id, coup_title, coup_money, coup_condition, coup_lock, coup_get_time,
+    coup_end_time, comment, status, add_time)
+            VALUES (#{uid}, #{coupID}, #{coupTitle}, #{coupMoney}, #{coupCondition}, #{coupLock}, #{coupGetTime},
+    #{coupEndTime}, #{comment}, #{status}, now())
+    </insert>
+    
+    <insert id="insertList" parameterType="java.util.List">
+    INSERT INTO coup_record(uid, coup_id, coup_title, coup_money, coup_condition, coup_lock, coup_get_time,
+    coup_end_time, comment, status, add_time)
+    VALUES
+      <foreach collection="list" item="item" open="(" separator="),(" close=")">
+      #{item.uid}, #{item.coupID}, #{item.coupTitle}, #{item.coupMoney}, #{item.coupCondition}, #{item.coupLock},
+      #{item.coupGetTime}, #{item.coupEndTime}, #{item.comment}, #{item.status}, now()
+      </foreach>
+    </insert>
+
+</mapper>

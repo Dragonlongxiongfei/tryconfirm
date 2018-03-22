@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.VipClassDao">
+
+    <select id="getAll" resultType="com.chenyou.admin.domain.VipClass">
+    SELECT
+      vip_id AS vipId, vip_title AS vipTitle, vip_type AS vipType, vip_price AS vipPrice, basic_price AS basicPrice,
+      discount AS discount,effective_time AS effectiveTime, vip_icon AS vipIcon, twice_flag AS twiceFlag,
+      three_time_flag AS threeTimeFlag, increase_ten_flag AS increaseTenFlag, increase_twenty_flag AS increaseTwentyFlag,
+      goods_vip_only AS goodsVipOnly, birthday_prize AS birthdayPrize, big_birthday_prize AS bigBirthdayPrize,
+      priority_pass AS priorityPass, custom_service AS customService, invalid_flag AS invalidFlag
+    FROM vip_class
+    </select>
+    <select id="findOne" parameterType="long" resultType="com.chenyou.admin.domain.VipClass">
+        SELECT
+            vip_id AS vipId, vip_title AS vipTitle,vip_type AS vipType, vip_price AS vipPrice, basic_price AS basicPrice,
+            discount AS discount, effective_time AS effectiveTime, vip_icon AS vipIcon, twice_flag AS twiceFlag,
+            three_time_flag AS threeTimeFlag, increase_ten_flag AS increaseTenFlag, increase_twenty_flag AS increaseTwentyFlag,
+            goods_vip_only AS goodsVipOnly, birthday_prize AS birthdayPrize, big_birthday_prize AS bigBirthdayPrize,
+            priority_pass AS priorityPass, custom_service AS customService,
+            invalid_flag AS invalidFlag
+        FROM vip_class
+        WHERE
+            vip_id = #{vipIp}
+    </select>
+
+    <insert id="saveOne" parameterType="com.chenyou.admin.domain.VipClass">
+    INSERT INTO vip_class (vip_title, vip_type, vip_price, basic_price, discount, effective_time,
+    vip_icon, twice_flag, three_time_flag, increase_ten_flag, increase_twenty_flag, goods_vip_only,
+    birthday_prize, big_birthday_prize, priority_pass, custom_service, add_time, invalid_flag)
+    VALUES(#{vipTitle}, #{vipType}, #{vipPrice}, #{basicPrice}, #{discount}, #{effectiveTime}, #{vipIcon},
+    #{twiceFlag}, #{threeTimeFlag}, #{increaseTenFlag}, #{increaseTwentyFlag}, #{goodsVipOnly}, #{birthdayPrize},
+    #{bigBirthdayPrize}, #{priorityPass}, #{customService}, now(), #{invalidFlag})
+    </insert>
+    <update id="updateOne" parameterType="com.chenyou.admin.domain.VipClass">
+    UPDATE vip_class
+    SET vip_title = #{vipTitle}, vip_type = #{vipType}, vip_price = #{vipPrice}, basic_price = #{basicPrice},
+        discount = #{discount}, effective_time = #{effectiveTime}, vip_icon = #{vipIcon}, twice_flag = #{twiceFlag},
+        three_time_flag = #{threeTimeFlag}, increase_ten_flag = #{increaseTenFlag}, increase_twenty_flag = #{increaseTwentyFlag},
+        goods_vip_only = #{goodsVipOnly}, birthday_prize = #{birthdayPrize}, big_birthday_prize = #{bigBirthdayPrize},
+        priority_pass = #{priorityPass}, custom_service = #{customService}, invalid_flag = #{invalidFlag}
+    WHERE vip_id = #{vipId}
+    </update>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.BuyPlatformDao">
+
+    <select id="findAll" resultType="com.chenyou.admin.domain.BuyPlatform">
+    SELECT * FROM buy_platform
+    </select>
+    <select id="findOne" parameterType="long" resultType="com.chenyou.admin.domain.BuyPlatform">
+    SELECT * FROM buy_platform WHERE id = #{id}
+    </select>
+
+    <insert id="saveOne" parameterType="com.chenyou.admin.domain.BuyPlatform">
+    INSERT INTO buy_platform(platform_id, platform_name, add_time, invalid_flag)
+    VALUES(#{platformID}, #{platformName}, now(), #{invalidFlag})
+    </insert>
+    <update id="updateOne" parameterType="com.chenyou.admin.domain.BuyPlatform">
+    UPDATE buy_platform
+    SET platform_id = #{platformID},
+        platform_name = #{platformName}, invalid_flag = #{invalidFlag}
+    WHERE id = #{id}
+    </update>
+
+</mapper>

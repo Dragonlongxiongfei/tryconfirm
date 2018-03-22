@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.SysUserRateDao">
+
+    <sql id="selectAS">
+        SELECT
+            uid AS uid,
+            prize_rate AS prizeRate
+    </sql>
+
+    <select id="findOne" parameterType="long" resultType="com.chenyou.admin.domain.SysUserRate">
+        <include refid="selectAS"/>
+        FROM
+          sys_user_rate
+        WHERE
+          uid = #{uid}
+    </select>
+    <insert id="insertOne" parameterType="com.chenyou.admin.domain.SysUserRate">
+        INSERT INTO
+          sys_user_rate
+        VALUES (#{uid}, #{prizeRate})
+    </insert>
+    <update id="updateOne" parameterType="com.chenyou.admin.domain.SysUserRate">
+        UPDATE sys_user_rate
+        SET
+            prize_rate = #{prizeRate}
+        WHERE uid = #{uid}
+    </update>
+</mapper>

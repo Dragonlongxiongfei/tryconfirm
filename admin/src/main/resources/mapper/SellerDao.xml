@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.SellerDao">
+
+    <sql id="selectAllAs">
+        SELECT
+        uid AS uid,
+        user_account AS userAccount,
+        user_password AS userPassword,
+        pull_money_passwd AS pullMoneyPasswd,
+        tb_shop_num AS tbShopNum,
+        jd_shop_num AS jdShopNum,
+        user_type AS userType,
+        mobile_phone AS mobilePhone,
+        mail AS mail,
+        user_weixin AS userWeiXin,
+        user_qq AS userQQ,
+        user_alipay_account AS userAlipay,
+        user_alipay_img AS userAlipayImg,
+        sex AS sex,
+        user_degree AS userDegree,
+        school_name AS schoolName,
+        birth_flag AS birthFlag,
+        DATE_FORMAT(birthday, '%Y-%m-%d') AS birthday,
+        constellation AS constellation,
+        user_bank_address AS userBankAddress,
+        user_bank_name AS userBankName,
+        user_bank_account AS userBankAccount,
+        job AS job,
+        month_income AS monthIncome,
+        car AS car,
+        head_img AS headImg,
+        vip_level AS vipLevel,
+        DATE_FORMAT(vip_end_time, '%Y-%m-%d') AS vipEndTime,
+        user_icon AS userIcon,
+        user_info_num AS userInfoNum,
+        info_finished_num AS infoFinishedNum,
+        real_name AS realName,
+        xmoney AS xmoney,
+        free_money AS freeMoney,
+        waiting_payback_money AS waitingPaybackMoney,
+        frozen_money AS frozenMoney,
+        withdrawn_money AS withdrawnMoney,
+        coins_num AS coins_num,
+        sending_coins AS sendingCoins,
+        user_task_num AS userTaskNum,
+        finished_task_num AS finishedTaskNum,
+        spend_total AS spendTotal,
+        num_of_store AS numOfStore,
+        number_of_tasks AS numberOfTasks,
+        invitation_code AS invitationCode,
+        invitation_uid AS invitationUid,
+        invitation_num AS invitationNum,
+        invitation_prize AS invitationPrize,
+        invitation_prize_coin AS invitationPrizeCoin,
+        ww_id AS wwID,
+        ww_level AS wwLevel,
+        ww_img AS wwImg,
+        ww_refuse_reason AS wwRefuseReason,
+        id_card AS idCard,
+        id_card_img AS idCardImg,
+        available_deposit AS availableDeposit,
+        seller_frozen_deposit AS sellerFrozenDeposit,
+        stand_money AS standMoney,
+        taobao_score AS taobaoScore,
+        jd_score AS jdScore,
+        last_login_time AS lastLoginTime,
+        DATE_FORMAT(registe_time, '%Y-%m-%d') AS registeTime,
+        DATE_FORMAT(forbidden_time, '%Y-%m-%d') AS forbiddenTime,
+
+        update_user AS updateUser,
+        forbidden_reason AS forbiddenReason,
+        login_ip AS loginIp,
+        invalid_flag AS invalidFlag
+    </sql>
+
+    <select id="findBuyerPagable" parameterType="Map" resultType="com.chenyou.admin.domain.SysUserSeller">
+        <include refid="selectAllAs"></include>
+        FROM
+        sys_user
+        WHERE
+        user_type = 2 and (invalid_flag = 0
+        <if test="withInvalid != null and withInvalid != ''">
+            OR invalid_flag = #{withInvalid}
+        </if>
+        )
+        <if test="uid != null and uid != ''">
+            and uid = #{uid}
+        </if>
+        <if test="inuid != null and inuid != ''">
+            and invitation_uid = #{inuid}
+        </if>
+        <if test="mobilePhone != null and mobilePhone != ''">
+            and mobile_phone = #{mobilePhone}
+        </if>
+       <!-- <if test="realName != null and realName != ''">
+            and real_name LIKE "%"#{realName}"%"
+        </if>-->
+        <if test="vipLevel != null and vipLevel != ''">
+            AND vip_level IN <![CDATA[${vipLevel}]]>
+        </if>
+       <!-- <if test="wwID != null and wwID != ''">
+            AND ww_id = #{wwID}
+        </if>
+        <if test="sex != null and sex != ''">
+            AND sex IN <![CDATA[${sex}]]>
+        </if>-->
+        ORDER BY uid ASC
+        <if test="page != null">
+            LIMIT #{page}, #{size}
+        </if>
+    </select>
+    <select id="findOne" parameterType="long" resultType="com.chenyou.admin.domain.SysUserSeller">
+        <include refid="selectAllAs"></include> FROM sys_user
+        WHERE uid = #{uid}
+    </select>
+
+    <select id="getAllCount" parameterType="Map" resultType="int">
+        SELECT count(uid) FROM sys_user
+        WHERE
+        user_type = 2 and (invalid_flag = 0
+        <if test="withInvalid != null and withInvalid != ''">
+            OR invalid_flag = #{withInvalid}
+        </if>
+        )
+        <if test="vipLevel != null and vipLevel != ''">
+            and vip_level IN  <![CDATA[${vipLevel}]]>
+        </if>
+        <if test="uid != null and uid != ''">
+            and uid = #{uid}
+        </if>
+     <!--   <if test="realName != null and realName != ''">
+            and real_name LIKE "%"#{realName}"%"
+        </if>
+        <if test="userAccount != null and userAccount != ''">
+            and user_account = #{userAccount}
+        </if>
+        <if test="wwID != null and wwID != ''">
+            and ww_id = #{wwID}
+        </if>-->
+
+    </select>
+
+    <update id="updateSeller" parameterType="com.chenyou.admin.domain.SysUserSeller">
+        UPDATE sys_user
+        SET
+        uid = #{uid}
+        <if test="forbiddenTime != null and forbiddenTime != ''">
+            ,forbidden_time = #{forbiddenTime}
+        </if>
+        <if test="vipLevel != null and vipLevel != ''">
+            ,vip_level = #{vipLevel}
+        </if>
+        <if test="standMoney != null and standMoney != ''">
+            ,stand_money = #{standMoney}
+        </if>
+        <if test="spendTotal != null and spendTotal != ''">
+            ,spend_total = #{spendTotal}
+        </if>
+        <if test="freeMoney != null and freeMoney != ''">
+            ,free_money = #{freeMoney}
+        </if>
+        <if test="vipEndTime != null and vipEndTime != ''">
+            ,vip_end_time = #{vipEndTime}
+        </if>
+        <if test="sellerFrozenDeposit != null and sellerFrozenDeposit != ''">
+            ,seller_frozen_deposit = #{sellerFrozenDeposit}
+        </if>
+        <if test="availableDeposit != null and availableDeposit != ''">
+            ,available_deposit =  #{availableDeposit}
+        </if>
+        <if test="invalidFlag != null and invalidFlag != ''">
+            ,invalid_flag = #{invalidFlag}
+        </if>
+        <if test="forbiddenReason != null and forbiddenReason != ''">
+            ,forbidden_reason = #{forbiddenReason}
+        </if>
+        <if test="invalidFlag == 0">
+            ,invalid_flag = #{invalidFlag}
+        </if>
+        <if test="updateUser != null">
+            ,update_user = #{updateUser}
+        </if>
+        WHERE
+        uid = #{uid}
+    </update>
+    <update id="updateFrozen" parameterType="com.chenyou.admin.domain.SysUserSeller">
+        UPDATE sys_user
+        SET
+        <if test="sellerFrozenDeposit != null and sellerFrozenDeposit != ''">
+            seller_frozen_deposit = seller_frozen_deposit + #{sellerFrozenDeposit},
+            available_deposit = available_deposit - #{sellerFrozenDeposit}
+        </if>
+        <if test="xmoney!= null and sellerFrozenDeposit != ''">
+            ,xmoney = xmoney + #{xmoney}
+        </if>
+        WHERE
+        uid = #{uid}
+    </update>
+
+    <update id="deleteByPrimaryKey" parameterType="string">
+        UPDATE sys_user SET invalid_flag = 1 WHERE uid = #{uid}
+    </update>
+
+</mapper>

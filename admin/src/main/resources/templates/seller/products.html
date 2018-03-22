@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout">
+<head>
+    <title>商品列表</title>
+</head>
+<!--<script src="../static/plugins/datepicker/bootstrap-datepicker.js"></script>-->
+<!--<script src="../static/plugins/datepicker/datepicker3.css"></script>-->
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" layout:fragment="content" id = "mainContent">
+    <section class="content-header">
+        <h1>商品列表</h1>
+    </section>
+    <section class="content">
+        <div class="col-md-12 form-group">
+            <form th:action="${'/task/productslist'}" method="post">
+                商品ID:<input id="goodsId" name="goodsId" th:value="${goodsId}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="商品ID" />
+                商品名称:<input id="goodsName" name="goodsName" th:value="${goodsName}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="商品名称" />
+                商家ID:<input id="uid" name="uid" th:value="${uid}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="商家ID" />
+
+                申请类型:&nbsp;<label><input type="radio" name="terminalType" value="1" th:checked="${terminalType != null and #strings.contains(terminalType,'1')}" />电脑端</label>
+                <label><input type="radio" name="terminalType" value="2" th:checked="${terminalType != null and #strings.contains(terminalType,'2')}" />手机端</label>
+                <!--<label><input type="checkbox" name="vipLevel" value="2" th:checked="${vipLevel != null and #strings.contains(vipLevel,'2')}" />双客户端</label>-->
+                &nbsp;&nbsp;
+                <!--<label>
+                    <input type="checkbox" name="with-Invalid" th:value="2" th:checked="${withInvalid!= null and #strings.contains(withInvalid,'2')}" /> 包含不通过
+                    <input type="checkbox" name="with-Invalid" th:value="1" checked="checked" /> 包含通过
+                </label>-->
+                <button class="btn btn-default" style="vertical-align: top;" type="submit" title="查询">
+                    <i class="glyphicon glyphicon-search icon-search"></i>
+                </button>
+            </form>
+            <div style="margin-bottom:10px;">
+           <!-- <button id="btn_add" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-add" aria-hidden="false">增加</span>
+            </button>-->
+            <button id="btn_edit" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-add" aria-hidden="true">编辑</span>
+            </button>
+            </div>
+        </div>
+        <table id="table" class="table" style="word-break:break-all; "></table>
+    </section>
+    <!-- 模态框（Modal） -->
+   <!-- <div class="modal fade" id="modalDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/task/update}" method="post" role="form" id="form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="dialogTitle">不通过</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" placeholder="不通过原因" name="unpassReason"/>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <span id="errContainer" style="color:red;"/>
+                            <input type="hidden" id="invalidFlag" name="invalidFlag" value="2"/>
+                            <input type="text" id="gid" name="gid" />
+                            <input type="text" id="uid" name="uid" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">确认</button>
+                    </div>
+                </form>
+            </div>&lt;!&ndash; /.modal-content &ndash;&gt;
+        </div>&lt;!&ndash; /.modal-dialog &ndash;&gt;
+    </div>-->
+    <!-- /.modal -->
+    <!-- 模态框（Modal）start  -->
+    <div class="modal fade" id="modalDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="tf" action="/task/dataedit" class="form-horizontal" th:method="POST" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="dialogTitle">新建</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="id" name="id" />
+                        <div class="form-group">
+                            <label for="goodsName" class="col-sm-3 control-label">商品名称:</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="goodsName" name="goodsName" placeholder="商品名称" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="storeName" class="col-sm-3 control-label">店铺名:</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="storeName" name="storeName" placeholder="店铺名" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="searchResultImg" class="col-sm-3 control-label">淘宝主图:</label>
+                            <a href="javascript:;" class="file">
+                                <input type="file" name="searchResultImg" id="searchResultImg" />
+                            </a>
+                            <!--<div class="col-sm-8">
+                                <input class="form-control" id="searchResultImg" name="searchResultImg" placeholder="淘宝主图" />
+                            </div>-->
+                        </div>
+                        <div class="form-group">
+                            <label for="applyNum" class="col-sm-3 control-label">已申请人数:</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="applyNum" name="applyNum" placeholder="已申请人数" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="prizeNum" class="col-sm-3 control-label">已中奖人数:</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="prizeNum" name="prizeNum" placeholder="已中奖人数" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="goodsNum" class="col-sm-3 control-label">总份数:</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="goodsNum" name="goodsNum" placeholder="总份数" />
+                            </div>
+                        </div>
+                       <!-- <div class="form-group">
+                            <label for="lightImg" class="col-sm-3 control-label">徽章(点亮)</label>
+                            <div class="col-sm-8">
+                                <a href="javascript:;" class="file">选择图片
+                                    <input type="file" name="lightImg" id="lightImg" />
+                                </a>
+                                <span class="showFileName"></span>
+                                <span class="fileerrorTip"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="darkImg" class="col-sm-3 control-label">徽章(未点亮)</label>
+                            <div class="col-sm-8">
+                                <a href="javascript:;" class="file">选择图片
+                                    <input type="file" name="darkImg" id="darkImg" />
+                                </a>
+                                <span class="showFileName"></span>
+                                <span class="fileerrorTip"></span>
+                            </div>
+                        </div>-->
+                        <div class="form-group">
+                            <label for="goodsOrder" class="col-sm-3 control-label">商品排序:</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="goodsOrder" name="goodsOrder" placeholder="商品排序(数值越大排在前面)" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">状态</label>
+                            <div class="col-sm-8">
+                                <input type="radio" id="invalidFlag1" name="invalidFlag" value="0" /><label for="invalidFlag1">正常</label>
+                                <input type="radio" id="invalidFlag2" name="invalidFlag" value="1" /><label for="invalidFlag2">禁用</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">发布平台</label>
+                            <div class="col-sm-8">
+                                <input type="radio" id="platform1" name="platform" value="1" /><label for="platform1">淘宝</label>
+                                <input type="radio" id="platform2" name="platform" value="2" /><label for="platform2">天猫</label>
+                                <input type="radio" id="platform3" name="platform" value="3" /><label for="platform3">京东</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" id="tsubmit" class="btn btn-success" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框（Modal）end  -->
+</div>
+<div style="display: none;" layout:fragment="script">
+    <!-- form validate -->
+    <script src="https://cdn.bootcss.com/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-validate/1.16.0/jquery.validate.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.js"></script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+        function tableDataView(row){
+            var view =
+                '<div class="panel panel-info">'
+                + '<div class="panel-heading">'
+                + '<h3 class="panel-title" style="display: inline-block;">基本信息</h3>'
+                + '</div>'
+                + '<div class="panel-body">'
+                + '<div class="col-md-3">'
+                + '<div><label style="float: left">下单方式(0:pc 1:app):</label><p style="padding-left: 150px;height: 20px">'+ row.terminalType +'</p></div>'
+                + '<div><label style="float: left">分类:</label><p style="padding-left: 150px;height: 20px">'+ row.goodsClasspId +'</p></div>'
+                + '<div><label style="float: left">规格:</label><p style="padding-left: 150px;height: 20px">'+ row.productsize +'</p></div>'
+                + '<div><label style="float: left">价格:</label><p style="padding-left: 150px;height: 20px">'+ row.goodsPrice +'</p></div>'
+                + '<div><label style="float: left">是否包邮:</label><p style="padding-left: 150px;height: 20px">'+ row.freeMail +'</p></div>'
+                + '<div><label style="float: left">商家要求:</label><p style="padding-left: 150px;height: 20px">'+ row.sellerRequire +'</p></div>'
+                + '<div><label style="float: left">创建时间:</label><p style="padding-left: 150px;height: 20px">'+ row.addTime +'</p></div>'
+                + '<div><label style="float: left">匹配买家淘气值:</label><p style="padding-left:  150px;height: 20px">'+ row.taoqiFlag +'</p></div>'
+                + '<div><label style="float: left">官网首页轮播广告:</label><p style="padding-left:  150px;height: 20px">'+ row.lunboFlag +'</p></div>'
+               /* + '<div><label style="float: left">精准买家兴趣点:</label><p style="padding-left: 120px;height: 20px">'+ row.huabeiFlag+'</p></div>'*/
+                + '<div><label style="float: left">优先审核:</label><p style="padding-left:  150px;height: 20px">'+ row.prePassFlag  +'</p></div>'
+                + '<div><label style="float: left">商品总金额:</label><p style="padding-left:  150px;height: 20px">'+ row.allMoney +'</p></div>'
+                + '<div><label style="float: left">担保金 :</label><p style="padding-left:  150px;height: 20px">'+ row.danbaoMoney +'</p></div>'
+                + '</div>'
+                + '<div class="col-md-3">'
+                + '<div><label style="float: left">查找方式:</label><p style="padding-left: 120px;height: 20px">'+ row.methodFind +'</p></div>'
+                + '<div><label style="float: left">关键词:</label><p style="padding-left: 120px;height: 20px">'+ JSON.stringify(row.searchKeywords) +'</p></div>'
+                + '<div><label style="float: left">筛选条件:</label><p style="padding-left: 120px;height: 20px">'+ row.coinsReturn+'</p></div>'
+                + '<div><label style="float: left">排列顺序:</label><p style="padding-left: 120px;height: 20px">'+ row.huabeiFlag +'</p></div>'
+                + '<div><label style="float: left">商品分类:</label><p style="padding-left: 120px;height: 20px">'+ row.goodsClasspId +'</p></div>'
+                + '<div><label style="float: left">价格区间:</label><p style="padding-left: 120px;height: 20px">'+ row.priceRange +'</p></div>'
+                + '<div><label style="float: left">投放试用总份数:</label><p style="padding-left: 120px;height: 20px">'+ row.goodsNum +'</p></div>'
+                + '<div><label style="float: left">每日投放试用份数:</label><p style="padding-left: 120px;height: 20px">'+ row.limitPerDay +'</p></div>'
+                + '</div>'
+                + '<div class="col-md-3">'
+                + '<div><label style="float: left">试客身份实名认证:</label><p style="padding-left: 120px;height: 20px"> 是 </p></div>'
+                + '<div><label style="float: left">人群定向:</label><p style="padding-left: 120px;height: 20px">是 </p></div>'
+                + '<div><label style="float: left">抽奖服务费:</label><p style="padding-left: 120px;height: 20px"> 是</p></div>'
+                + '<div><label style="float: left">快速返款服务费:</label><p style="padding-left: 120px;height: 20px">是 </p></div>'
+                + '<div><label style="float: left">用户行为监控:</label><p style="padding-left: 120px;height: 20px">是</p></div>'
+                + '<div><label style="float: left">多天试客任务回访:</label><p style="padding-left: 120px;height: 20px"> 是</p></div>'
+                + '<div><label style="float: left">试用任务推送:</label><p style="padding-left: 120px;height: 20px">是</p></div>'
+                + '<div><label style="float: left">额外收藏商品:</label><p style="padding-left: 120px;height: 20px"> 是 </p></div>'
+                + '<div><label style="float: left">防重复中奖:</label><p style="padding-left: 120px;height: 20px"> 是</p></div>'
+                + '</div>'
+
+                + '<div  class="col-md-3">'
+                + '<div><label style="float: left">进店关键词:</label><p style="padding-left: 130px;height: 20px"> 是</p></div>'
+                + '<div><label style="float: left">货比三家:</label><p style="padding-left: 130px;height: 20px"> 是 </p></div>'
+                + '<div><label style="float: left">评价:</label><p style="padding-left: 130px;height: 20px">是</p></div>'
+                + '<div><label style="float: left">设置关键词好评:</label><p style="padding-left: 130px;height: 20px"> 是 </p></div>'
+                + '<div><label style="float: left">好评即可:</label><p style="padding-left: 130px;height: 20px"> 是 </p></div>'
+                + '<div><label style="float: left">普通图文晒图好评:</label><p style="padding-left: 130px;height: 20px"> 是 </p></div>'
+                + '<div><label style="float: left">真人秀买家晒图好评:</label><p style="padding-left: 130px;height: 20px"> 是 </p></div>'
+                + '<div><label style="float: left">小视频评价:</label><p style="padding-left: 130px;height: 20px"> 是 </p></div>'
+                + '<div><label style="float: left">防重复中奖:</label><p style="padding-left: 130px;height: 20px"> 是 </p></div>'
+                + '<div><label style="float: left">匹配买家信用值:</label><p style="padding-left: 130px;height: 20px"> 是 </p></div>'
+                + '</div>'
+              /*  + '<div><label style="float: left">关键词截图:</label><p style="padding-left: 120px;height: 20px">'+ row.huabeiFlag +'</p></div>'
+                + '<div><label style="float: left">详情商品问答:</label><p style="padding-left: 120px;height: 20px">'+ row.huabeiFlag +'</p></div>'*/
+                + '</div>';
+
+            return view;
+        }
+        var height = $(window).width() <= 767 ? $(window).height() - 115 : $(window).height() - 80;
+        var $table =$('#table');
+        $table.bootstrapTable({
+            url: '/task/gooddata',
+            striped: true,  //表格显示条纹
+            pagination: true, //启动分页
+            paginationLoop: false, //
+            pageSize: 50,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [50, 100, 200],  //记录数可选列表
+            search: false,  //是否启用查询
+            sortable: true, //是否启用排序
+            showHeader: true, //
+            showFooter: true, //
+            showRefresh: true,
+            showColumns: true,
+            sortOrder: 'desc',
+            sortName:'goodsOrder',
+            singleSelect: true, //
+            toolbar: '#toolbar', //
+            clickToSelect: true, //
+            stickyHeader: true, // 是否固定表头
+            sidePagination: "server", //表示服务端请求
+            detailView : true,
+            detailFormatter:  function (index, row) {
+                var aba = tableDataView(row);
+                return aba;
+            },
+            /*detailFormatter: function (index, row) {
+             var table = '<table  class="table table-bordered" style="word-break:break-all;" id="tableIndex">' +
+             '<tr><th>试用商品名称</th><th>商品类别</th><th>商品价格</th></tr><tr><td>'+row['goodsName']+'</td><td>'+row['goodsClass']+'</td><td>'+row['goodsPrice']+'</td></tr>' +
+             '<tr><th>任务有限期(天数)</th><th>当前任务押金</th><th>提供申请数量</th></tr><tr><td>'+3+'</td><td>'+row['searchPriceEnd']+'</td><td>'+row['applyNum']+'</td></tr>' +
+             '<tr><th>申请类型</th><th>提交时间</th><th>自然搜索词</th></tr><tr><td>'+row.applyType+'</td><td>'+row['addTime']+'</td><td>'+row['natureSearchWords']+'</td></tr>' +
+             '<tr><th></th></tr><tr><td>'+row['searchPriceStart']+'</td></tr></table>';
+             return table;
+             },*/
+            queryParamsType: "undefined",// limit or undefined
+            queryParams: function queryParams(params) {   //设置查询参数
+                var param = {
+                    //这里是在ajax发送请求的时候设置一些参数 params有什么东西，自己看看源码就知道了
+                    page: params.pageNumber - 1,
+                    size: params.pageSize,
+                    sortName: params.sortName,  //排序列名
+                    sortOrder: params.sortOrder,//排位命令（desc，asc）
+                    goodsId: /*[[${goodsId}]]*/,
+                    uid: /*[[${uid}]]*/,
+                    terminalType: /*[[${terminalType}]]*/,
+                    goodsName: /*[[${goodsName}]]*/,
+                    withInvalid: /*[[${withInvalid}]]*/
+                };
+                return param;
+            },
+            columns: [
+                /*{checkbox: true, align: 'center', valign: 'middle'},*/
+                {field: 'goodsId', title: 'ID', align: 'center', valign: 'middle',width:'50px',sortable: true},
+                {field: 'uid', title: '商家ID', align: 'center', valign: 'middle',sortable: true},
+                {field: 'storeName', title: '店铺名', align: 'center', valign: 'middle',sortable: true},
+                {field: 'goodsName', title: '试用商品名称', align: 'center', valign: 'middle',sortable: true},
+                {field: 'goodsUrl', title: '商品链接', align: 'center', valign: 'middle',width:'300px',sortable: true,
+                    formatter: function (value, row, index) {
+                            return "<a target='_blank' href="+row.goodsUrl+" >商品链接</a>";
+                    }},
+                {field: 'goodsOrder', title: '商品排序', align: 'center', valign: 'middle',sortable: true},
+                {field: 'terminalType', title: '申请类型', align: 'center', valign: 'middle',
+                    formatter: function (value, row, index) {
+                        if (row.terminalType == '2') {
+                            return "手机端";
+                        } else {
+                            return "电脑端";
+                        }
+                    },sortable: true},
+                {field: 'goodsClasspId', title: '商品类别',sortable: true, align: 'center', valign: 'middle',
+                    formatter: function (value, row, index) {
+                        if (value == '100') {
+                            return "潮流女装";
+                        }
+                        if (value == '200') {
+                            return "时尚男装";
+                        }
+                        if (value == '300') {
+                            return "鞋子箱包";
+                        }
+                        if (value == '400') {
+                            return "文娱运动";
+                        }
+                        if (value == '500') {
+                            return "珠宝配饰";
+                        }
+                        if (value == '600') {
+                            return "数码家电";
+                        }
+                        if (value == '700') {
+                            return "护肤彩妆";
+                        }
+                        if (value == '800') {
+                            return "母婴用品";
+                        }
+                        if (value == '900') {
+                            return "居家日用";
+                        }
+                        if (value == '1000') {
+                            return "家纺家装";
+                        }
+                        if (value == '1100') {
+                            return "美食特产";
+                        }
+                        if (value == '1200') {
+                            return "车用周边";
+                        }
+                        if (value == '1300') {
+                            return "家庭保健";
+                        }
+                        if (value == '1500') {
+                            return "内衣内裤";
+                        }
+                        else{
+                            return "其他";
+                        }
+                    }
+                },
+                {field: 'highValueFlag', title: '是否高价值', align: 'center', valign: 'middle'
+                    ,
+                    formatter: function (value, row, index) {
+                        if (value == '0') {
+                            return "否";
+                        } else {
+                            return "是";
+                        }
+                    },sortable: true},
+                {field: 'stopFlag', title: '是否暂停', align: 'center', valign: 'middle'
+                    ,
+                    formatter: function (value, row, index) {
+                        if (value == '0') {
+                            return "否";
+                        } else {
+                            return "是";
+                        }
+                    },sortable: true},
+                {field: 'invalidFlag', title: '是否下架', align: 'center', valign: 'middle'
+                    ,
+                    formatter: function (value, row, index) {
+                        if (value == '0') {
+                            return "否";
+                        } else {
+                            return "是";
+                        }
+                    },sortable: true},
+                {
+                    field: 'addTime',
+                    title: '提交时间',
+                    align: 'center',
+                    valign: 'middle',sortable: true
+                }
+                ,
+                {field: 'action', title: '操作', align: 'center', valign: 'middle', formatter: 'actionFormatter', events: 'actionEvents', clickToSelect: true,width:'300px'}
+                /*,
+                {
+                    field: 'passFlag',
+                    title: '状态',
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: function (value, row, index) {
+                        if (value == '0') {
+                            return "<span class='label label-success'>通过</span>";
+                        }
+                        if (value == '1') {
+                            return "<span class='label label-success'>不通过</span>";
+                        }
+                        else {
+                            return "<span class='label label-danger'>未审核</span>";
+                        }
+                    },sortable: true
+                }*/
+            ]
+        });
+        // 格式化操作按钮
+        /*function actionFormatter(value, row, index) {
+            /!* return [
+             '<a class="update" href="javascript:;" onclick="passAction()" data-toggle="tooltip" title="通过"><i class="glyphicon glyphicon-edit"></i></a>　',
+             '<a class="delete" href="javascript:;" onclick="unpassAction()" data-toggle="tooltip" title="不通过"><i class="glyphicon glyphicon-remove"></i></a>'
+             ].join('');*!/
+            return  "<button class='btn btn-success btn-sm' onclick='passAction()'>通过</button>&nbsp;<button class='btn btn-danger btn-sm' onclick='unpassAction()'>不通过</button>";
+        }*/
+        function actionFormatter(value, row, index) {
+            /* return [
+             '<a class="update" href="javascript:;" onclick="passAction()" data-toggle="tooltip" title=""><i class="glyphicon glyphicon-edit"></i></a>　',
+             '<a class="delete" href="javascript:;" onclick="unpassAction()" data-toggle="tooltip" title="不通过"><i class="glyphicon glyphicon-remove"></i></a>'
+             ].join('');*/
+            return  "<button class='btn btn-success btn-sm' onclick='deleteAction()'>delete</button>";}
+
+      /*  $('#btn_add').click(function () {
+            $("#dialogTitle").text("新建");
+            $('#modalDialog').modal({backdrop: 'static', keyboard: false, show: true});
+        });
+        $(".file").on("change", "input[type='file']", function(){
+            var filePath = $(this).val();
+            var fileErrorTip = $(this).parent().parent().find(".fileerrorTip");
+            var showFileName = $(this).parent().parent().find(".showFileName");
+            if (filePath.indexOf("jpg") != -1 || filePath.indexOf("png") != -1) {
+                fileErrorTip.html("").hide();
+                var arr = filePath.split('\\');
+                var fileName = arr[arr.length-1];
+                showFileName.html(fileName);
+            } else {
+                showFileName.html("");
+                fileErrorTip.html("");
+                fileErrorTip.html("您未上传文件，或者您上传文件类型有误！").show();
+                return false
+            }
+        });*/
+        function deleteAction() {
+            var index = $table.find("tr.info").data("index");
+            var selObj = $table.bootstrapTable("getData")[index];
+            if(!selObj){
+                alert("请选择至少一行");
+                return;
+            }else {
+                if (!confirm("您是否确定删除?"))
+                    return;
+                var gid = selObj.goodsId;
+                var uid = selObj.uid;
+                $.ajax({
+                    type: "post",
+                    url: '/task/delete',
+                    data: {gid: gid},
+                    success: function (data) {
+                        if (data == '删除成功') {
+                            alert('删除成功！');
+//                            window.location.reload();
+                        } else {
+                            alert(data);
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        }
+        $('#btn_edit').click(function() {
+            var index = $("#table").find("tr.info").data("index");
+            var selObj = $("#table").bootstrapTable('getData')[index];
+            if (!selObj) {
+                alert("请选择一条记录");
+                return;
+            }
+
+            document.forms["tf"].id.value = selObj.goodsId;
+            document.forms["tf"].goodsName.value = selObj.goodsName;
+            document.forms["tf"].storeName.value = selObj.storeName;
+
+            document.forms["tf"].goodsOrder.value = selObj.goodsOrder;
+            document.forms["tf"].invalidFlag.value = selObj.invalidFlag;
+            document.forms["tf"].platform.value = selObj.platform;
+            document.forms["tf"].applyNum.value = selObj.applyNum;//已申请人数，中奖人数
+            document.forms["tf"].prizeNum.value = selObj.prizeNum;//已申请人数，中奖人数
+//            document.forms["tf"].searchResultImg.value = selObj.searchResultImg;//已申请人数，中奖人数
+            document.forms["tf"].goodsNum.value = selObj.goodsNum;//
+            $("#dialogTitle").text("编辑");
+            $('#modalDialog').modal({backdrop: 'static', keyboard: false, show: true});
+        });
+        // 通过
+        function passAction() {
+            var index = $table.find("tr.info").data("index");
+            var selObj = $table.bootstrapTable("getData")[index];
+            if(!selObj){
+                alert("请选择至少一行");
+                return;
+            }else {
+                if (!confirm("您是否确定提交?"))
+                    return;
+                var gid = selObj.goodsId;
+                var uid = selObj.uid;
+                $.ajax({
+                    type: "post",
+                    dataType: "application/json",
+                    url: '/task/update',
+                    data: {gid: gid, uid:uid,invalidFlag: 1},
+                    success: function (data) {
+                        alert(data)
+                        window.location.reload();
+                    },
+                    error: function(){
+                        console.log("task submit error")
+                        alert("审核失败");
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+        //不通过
+        function unpassAction() {
+            var index = $table.find("tr.info").data("index");
+            var selObj = $table.bootstrapTable("getData")[index];
+            if (!selObj) {
+                alert("请选择至少一行");
+                return;
+            }
+            document.forms["form"].unpassReason.value = selObj.unpassReason;
+            document.forms["form"].invalidFlag.value = 2;
+            document.forms["form"].uid.value = selObj.uid;
+            document.forms["form"].gid.value = selObj.goodsId;
+            $('#modalDialog').modal('show');
+        }
+        /*else {
+         if (!confirm("您是否确定提交?"))
+         return;
+         var gid = selObj.goodsId;
+         var uid = selObj.uid;
+         $.ajax({
+         type: "post",
+         url: '/task/update',
+         async: true,
+         data: {gid: gid,uid:uid, invalidFlag: 2},
+         success: function (data) {
+         alert(data);
+         window.location.reload();
+         },
+         error: function(){
+         console.log("task submit error")
+         alert("审核失败");
+         window.location.reload();
+         }
+
+         });
+         }*/
+        $("#form").validate({
+            rules: {
+                unpassReason: 'required'
+            },
+            messages: {
+                unpassReason: '不通过原因不能为空'
+            },
+            focusCleanup: true,
+            focusInvalid: false,
+            onfocusin: function (element) {
+                $("#errContainer").html("");
+            },
+            errorPlacement: function (error, element) {
+                $("#errContainer").html("");
+                $("#errContainer").html($(error).text());
+            },
+            submitHandler: function (form) {
+                $(form).ajaxSubmit({
+                    success: function (responseText, statusText, xhr, $form) {
+                        /*var json = $.parseJSON(responseText);
+                         alert(json.toString());*/
+                        if (responseText == '审核成功') {
+                            alert('审核成功！');
+                            window.location.reload();
+                        } else {
+                            alert('审核失败');
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

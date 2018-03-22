@@ -1,0 +1,947 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.SysUserDao">
+  <resultMap id="BaseResultMap" type="com.chenyou.admin.domain.SysUser">
+    <id column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    <result column="pull_money_passwd" jdbcType="VARCHAR" property="pullMoneyPasswd" />
+    <result column="tb_shop_num" jdbcType="SMALLINT" property="tbShopNum" />
+    <result column="jd_shop_num" jdbcType="SMALLINT" property="jdShopNum" />
+    <result column="user_type" jdbcType="TINYINT" property="userType" />
+    <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+    <result column="mail" jdbcType="VARCHAR" property="mail" />
+    <result column="user_weixin" jdbcType="VARCHAR" property="userWeixin" />
+    <result column="user_qq" jdbcType="VARCHAR" property="userQq" />
+    <result column="user_alipay_account" jdbcType="VARCHAR" property="userAlipayAccount" />
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="marry_flag" jdbcType="TINYINT" property="marryFlag" />
+    <result column="user_degree" jdbcType="VARCHAR" property="userDegree" />
+    <result column="school_name" jdbcType="VARCHAR" property="schoolName" />
+    <result column="birth_flag" jdbcType="BIT" property="birthFlag" />
+    <result column="birthday" jdbcType="DATE" property="birthday" />
+    <result column="constellation" jdbcType="VARCHAR" property="constellation" />
+    <result column="receiver_address" jdbcType="VARCHAR" property="receiverAddress" />
+    <result column="receiver_phone" jdbcType="VARCHAR" property="receiverPhone" />
+    <result column="receiver_name" jdbcType="VARCHAR" property="receiverName" />
+    <result column="user_bank_address" jdbcType="VARCHAR" property="userBankAddress" />
+    <result column="user_bank_name" jdbcType="VARCHAR" property="userBankName" />
+    <result column="user_bank_account" jdbcType="VARCHAR" property="userBankAccount" />
+    <result column="height" jdbcType="SMALLINT" property="height" />
+    <result column="weight" jdbcType="SMALLINT" property="weight" />
+    <result column="clothing_size" jdbcType="VARCHAR" property="clothingSize" />
+    <result column="shose_size" jdbcType="SMALLINT" property="shoseSize" />
+    <result column="clothing_style" jdbcType="VARCHAR" property="clothingStyle" />
+    <result column="myopia" jdbcType="BIT" property="myopia" />
+    <result column="three_size1" jdbcType="INTEGER" property="threeSize1" />
+    <result column="three_size2" jdbcType="INTEGER" property="threeSize2" />
+    <result column="three_size3" jdbcType="INTEGER" property="threeSize3" />
+    <result column="job" jdbcType="VARCHAR" property="job" />
+    <result column="month_income" jdbcType="VARCHAR" property="monthIncome" />
+    <result column="car" jdbcType="VARCHAR" property="car" />
+    <result column="head_img" jdbcType="VARCHAR" property="headImg" />
+    <result column="vip_level" jdbcType="TINYINT" property="vipLevel" />
+    <result column="vip_end_time" jdbcType="TIMESTAMP" property="vipEndTime" />
+    <result column="user_icon" jdbcType="VARCHAR" property="userIcon" />
+    <result column="user_info_num" jdbcType="SMALLINT" property="userInfoNum" />
+    <result column="info_finished_num" jdbcType="SMALLINT" property="infoFinishedNum" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="xmoney" jdbcType="DECIMAL" property="xmoney" />
+    <result column="free_money" jdbcType="DECIMAL" property="freeMoney" />
+    <result column="waiting_payback_money" jdbcType="DECIMAL" property="waitingPaybackMoney" />
+    <result column="frozen_money" jdbcType="DECIMAL" property="frozenMoney" />
+    <result column="withdrawn_money" jdbcType="DECIMAL" property="withdrawnMoney" />
+    <result column="coins_num" jdbcType="SMALLINT" property="coinsNum" />
+    <result column="sending_coins" jdbcType="SMALLINT" property="sendingCoins" />
+    <result column="user_task_num" jdbcType="SMALLINT" property="userTaskNum" />
+    <result column="finished_task_num" jdbcType="SMALLINT" property="finishedTaskNum" />
+    <result column="invitation_code" jdbcType="VARCHAR" property="invitationCode" />
+    <result column="invitation_uid" jdbcType="SMALLINT" property="invitationUid" />
+    <result column="invitation_num" jdbcType="SMALLINT" property="invitationNum" />
+    <result column="invitation_prize" jdbcType="SMALLINT" property="invitationPrize" />
+    <result column="invitation_prize_coin" jdbcType="SMALLINT" property="invitationPrizeCoin" />
+    <result column="ww_id" jdbcType="VARCHAR" property="wwId" />
+    <result column="ww_level" jdbcType="REAL" property="wwLevel" />
+    <result column="ww_img" jdbcType="VARCHAR" property="wwImg" />
+    <result column="ww_refuse_reason" jdbcType="VARCHAR" property="wwRefuseReason" />
+    <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+    <result column="id_card_img" jdbcType="VARCHAR" property="idCardImg" />
+    <result column="available_deposit" jdbcType="DECIMAL" property="availableDeposit" />
+    <result column="seller_frozen_deposit" jdbcType="DECIMAL" property="sellerFrozenDeposit" />
+    <result column="stand_money" jdbcType="DECIMAL" property="standMoney" />
+    <result column="taobao_score" jdbcType="SMALLINT" property="taobaoScore" />
+    <result column="jd_score" jdbcType="SMALLINT" property="jdScore" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="registe_time" jdbcType="TIMESTAMP" property="registeTime" />
+    <result column="forbidden_time" jdbcType="DATE" property="forbiddenTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="invalid_flag" jdbcType="TINYINT" property="invalidFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    uid, user_account, user_password, pull_money_passwd, tb_shop_num, jd_shop_num, user_type, 
+    mobile_phone, mail, user_weixin, user_qq, user_alipay_account, sex, marry_flag, user_degree, 
+    school_name, birth_flag, birthday, constellation, receiver_address, receiver_phone, 
+    receiver_name, user_bank_address, user_bank_name, user_bank_account, height, weight, 
+    clothing_size, shose_size, clothing_style, myopia, three_size1, three_size2, three_size3, 
+    job, month_income, car, head_img, vip_level, vip_end_time, user_icon, user_info_num, 
+    info_finished_num, real_name, xmoney, free_money, waiting_payback_money, frozen_money, 
+    withdrawn_money, coins_num, sending_coins, user_task_num, finished_task_num, invitation_code, 
+    invitation_uid, invitation_num, invitation_prize, invitation_prize_coin, ww_id, ww_level, 
+    ww_img, ww_refuse_reason, id_card, id_card_img, available_deposit, seller_frozen_deposit, 
+    stand_money, taobao_score, jd_score, last_login_time, registe_time, forbidden_time, 
+    update_user, invalid_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.chenyou.admin.domain.SysUser">
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="userAccount != null">
+        user_account,
+      </if>
+      <if test="userPassword != null">
+        user_password,
+      </if>
+      <if test="pullMoneyPasswd != null">
+        pull_money_passwd,
+      </if>
+      <if test="tbShopNum != null">
+        tb_shop_num,
+      </if>
+      <if test="jdShopNum != null">
+        jd_shop_num,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+      <if test="mobilePhone != null">
+        mobile_phone,
+      </if>
+      <if test="mail != null">
+        mail,
+      </if>
+      <if test="userWeixin != null">
+        user_weixin,
+      </if>
+      <if test="userQq != null">
+        user_qq,
+      </if>
+      <if test="userAlipayAccount != null">
+        user_alipay_account,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="marryFlag != null">
+        marry_flag,
+      </if>
+      <if test="userDegree != null">
+        user_degree,
+      </if>
+      <if test="schoolName != null">
+        school_name,
+      </if>
+      <if test="birthFlag != null">
+        birth_flag,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="constellation != null">
+        constellation,
+      </if>
+      <if test="receiverAddress != null">
+        receiver_address,
+      </if>
+      <if test="receiverPhone != null">
+        receiver_phone,
+      </if>
+      <if test="receiverName != null">
+        receiver_name,
+      </if>
+      <if test="userBankAddress != null">
+        user_bank_address,
+      </if>
+      <if test="userBankName != null">
+        user_bank_name,
+      </if>
+      <if test="userBankAccount != null">
+        user_bank_account,
+      </if>
+      <if test="height != null">
+        height,
+      </if>
+      <if test="weight != null">
+        weight,
+      </if>
+      <if test="clothingSize != null">
+        clothing_size,
+      </if>
+      <if test="shoseSize != null">
+        shose_size,
+      </if>
+      <if test="clothingStyle != null">
+        clothing_style,
+      </if>
+      <if test="myopia != null">
+        myopia,
+      </if>
+      <if test="threeSize1 != null">
+        three_size1,
+      </if>
+      <if test="threeSize2 != null">
+        three_size2,
+      </if>
+      <if test="threeSize3 != null">
+        three_size3,
+      </if>
+      <if test="job != null">
+        job,
+      </if>
+      <if test="monthIncome != null">
+        month_income,
+      </if>
+      <if test="car != null">
+        car,
+      </if>
+      <if test="headImg != null">
+        head_img,
+      </if>
+      <if test="vipLevel != null">
+        vip_level,
+      </if>
+      <if test="vipEndTime != null">
+        vip_end_time,
+      </if>
+      <if test="userIcon != null">
+        user_icon,
+      </if>
+      <if test="userInfoNum != null">
+        user_info_num,
+      </if>
+      <if test="infoFinishedNum != null">
+        info_finished_num,
+      </if>
+      <if test="realName != null">
+        real_name,
+      </if>
+      <if test="xmoney != null">
+        xmoney,
+      </if>
+      <if test="freeMoney != null">
+        free_money,
+      </if>
+      <if test="waitingPaybackMoney != null">
+        waiting_payback_money,
+      </if>
+      <if test="frozenMoney != null">
+        frozen_money,
+      </if>
+      <if test="withdrawnMoney != null">
+        withdrawn_money,
+      </if>
+      <if test="coinsNum != null">
+        coins_num,
+      </if>
+      <if test="sendingCoins != null">
+        sending_coins,
+      </if>
+      <if test="userTaskNum != null">
+        user_task_num,
+      </if>
+      <if test="finishedTaskNum != null">
+        finished_task_num,
+      </if>
+      <if test="invitationCode != null">
+        invitation_code,
+      </if>
+      <if test="invitationUid != null">
+        invitation_uid,
+      </if>
+      <if test="invitationNum != null">
+        invitation_num,
+      </if>
+      <if test="invitationPrize != null">
+        invitation_prize,
+      </if>
+      <if test="invitationPrizeCoin != null">
+        invitation_prize_coin,
+      </if>
+      <if test="wwId != null">
+        ww_id,
+      </if>
+      <if test="wwLevel != null">
+        ww_level,
+      </if>
+      <if test="wwImg != null">
+        ww_img,
+      </if>
+      <if test="wwRefuseReason != null">
+        ww_refuse_reason,
+      </if>
+      <if test="idCard != null">
+        id_card,
+      </if>
+      <if test="idCardImg != null">
+        id_card_img,
+      </if>
+      <if test="availableDeposit != null">
+        available_deposit,
+      </if>
+      <if test="sellerFrozenDeposit != null">
+        seller_frozen_deposit,
+      </if>
+      <if test="standMoney != null">
+        stand_money,
+      </if>
+      <if test="taobaoScore != null">
+        taobao_score,
+      </if>
+      <if test="jdScore != null">
+        jd_score,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+      <if test="registeTime != null">
+        registe_time,
+      </if>
+      <if test="forbiddenTime != null">
+        forbidden_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="invalidFlag != null">
+        invalid_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="userAccount != null">
+        #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null">
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="pullMoneyPasswd != null">
+        #{pullMoneyPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="tbShopNum != null">
+        #{tbShopNum,jdbcType=SMALLINT},
+      </if>
+      <if test="jdShopNum != null">
+        #{jdShopNum,jdbcType=SMALLINT},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="mobilePhone != null">
+        #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="mail != null">
+        #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="userWeixin != null">
+        #{userWeixin,jdbcType=VARCHAR},
+      </if>
+      <if test="userQq != null">
+        #{userQq,jdbcType=VARCHAR},
+      </if>
+      <if test="userAlipayAccount != null">
+        #{userAlipayAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="marryFlag != null">
+        #{marryFlag,jdbcType=TINYINT},
+      </if>
+      <if test="userDegree != null">
+        #{userDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolName != null">
+        #{schoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="birthFlag != null">
+        #{birthFlag,jdbcType=BIT},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="constellation != null">
+        #{constellation,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverAddress != null">
+        #{receiverAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverPhone != null">
+        #{receiverPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null">
+        #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="userBankAddress != null">
+        #{userBankAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userBankName != null">
+        #{userBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="userBankAccount != null">
+        #{userBankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=SMALLINT},
+      </if>
+      <if test="weight != null">
+        #{weight,jdbcType=SMALLINT},
+      </if>
+      <if test="clothingSize != null">
+        #{clothingSize,jdbcType=VARCHAR},
+      </if>
+      <if test="shoseSize != null">
+        #{shoseSize,jdbcType=SMALLINT},
+      </if>
+      <if test="clothingStyle != null">
+        #{clothingStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="myopia != null">
+        #{myopia,jdbcType=BIT},
+      </if>
+      <if test="threeSize1 != null">
+        #{threeSize1,jdbcType=INTEGER},
+      </if>
+      <if test="threeSize2 != null">
+        #{threeSize2,jdbcType=INTEGER},
+      </if>
+      <if test="threeSize3 != null">
+        #{threeSize3,jdbcType=INTEGER},
+      </if>
+      <if test="job != null">
+        #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="monthIncome != null">
+        #{monthIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="car != null">
+        #{car,jdbcType=VARCHAR},
+      </if>
+      <if test="headImg != null">
+        #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="vipLevel != null">
+        #{vipLevel,jdbcType=TINYINT},
+      </if>
+      <if test="vipEndTime != null">
+        #{vipEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userIcon != null">
+        #{userIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfoNum != null">
+        #{userInfoNum,jdbcType=SMALLINT},
+      </if>
+      <if test="infoFinishedNum != null">
+        #{infoFinishedNum,jdbcType=SMALLINT},
+      </if>
+      <if test="realName != null">
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="xmoney != null">
+        #{xmoney,jdbcType=DECIMAL},
+      </if>
+      <if test="freeMoney != null">
+        #{freeMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="waitingPaybackMoney != null">
+        #{waitingPaybackMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="frozenMoney != null">
+        #{frozenMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawnMoney != null">
+        #{withdrawnMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="coinsNum != null">
+        #{coinsNum,jdbcType=SMALLINT},
+      </if>
+      <if test="sendingCoins != null">
+        #{sendingCoins,jdbcType=SMALLINT},
+      </if>
+      <if test="userTaskNum != null">
+        #{userTaskNum,jdbcType=SMALLINT},
+      </if>
+      <if test="finishedTaskNum != null">
+        #{finishedTaskNum,jdbcType=SMALLINT},
+      </if>
+      <if test="invitationCode != null">
+        #{invitationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="invitationUid != null">
+        #{invitationUid,jdbcType=SMALLINT},
+      </if>
+      <if test="invitationNum != null">
+        #{invitationNum,jdbcType=SMALLINT},
+      </if>
+      <if test="invitationPrize != null">
+        #{invitationPrize,jdbcType=SMALLINT},
+      </if>
+      <if test="invitationPrizeCoin != null">
+        #{invitationPrizeCoin,jdbcType=SMALLINT},
+      </if>
+      <if test="wwId != null">
+        #{wwId,jdbcType=VARCHAR},
+      </if>
+      <if test="wwLevel != null">
+        #{wwLevel,jdbcType=REAL},
+      </if>
+      <if test="wwImg != null">
+        #{wwImg,jdbcType=VARCHAR},
+      </if>
+      <if test="wwRefuseReason != null">
+        #{wwRefuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null">
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardImg != null">
+        #{idCardImg,jdbcType=VARCHAR},
+      </if>
+      <if test="availableDeposit != null">
+        #{availableDeposit,jdbcType=DECIMAL},
+      </if>
+      <if test="sellerFrozenDeposit != null">
+        #{sellerFrozenDeposit,jdbcType=DECIMAL},
+      </if>
+      <if test="standMoney != null">
+        #{standMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="taobaoScore != null">
+        #{taobaoScore,jdbcType=SMALLINT},
+      </if>
+      <if test="jdScore != null">
+        #{jdScore,jdbcType=SMALLINT},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registeTime != null">
+        #{registeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="forbiddenTime != null">
+        #{forbiddenTime,jdbcType=DATE},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="invalidFlag != null">
+        #{invalidFlag,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenyou.admin.domain.SysUser">
+    update sys_user
+    <set>
+      <if test="userAccount != null">
+        user_account = #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null">
+        user_password = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="pullMoneyPasswd != null">
+        pull_money_passwd = #{pullMoneyPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="tbShopNum != null">
+        tb_shop_num = #{tbShopNum,jdbcType=SMALLINT},
+      </if>
+      <if test="jdShopNum != null">
+        jd_shop_num = #{jdShopNum,jdbcType=SMALLINT},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="mobilePhone != null">
+        mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="mail != null">
+        mail = #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="userWeixin != null">
+        user_weixin = #{userWeixin,jdbcType=VARCHAR},
+      </if>
+      <if test="userQq != null">
+        user_qq = #{userQq,jdbcType=VARCHAR},
+      </if>
+      <if test="userAlipayAccount != null">
+        user_alipay_account = #{userAlipayAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="marryFlag != null">
+        marry_flag = #{marryFlag,jdbcType=TINYINT},
+      </if>
+      <if test="userDegree != null">
+        user_degree = #{userDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolName != null">
+        school_name = #{schoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="birthFlag != null">
+        birth_flag = #{birthFlag,jdbcType=BIT},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="constellation != null">
+        constellation = #{constellation,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverAddress != null">
+        receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverPhone != null">
+        receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null">
+        receiver_name = #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="userBankAddress != null">
+        user_bank_address = #{userBankAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userBankName != null">
+        user_bank_name = #{userBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="userBankAccount != null">
+        user_bank_account = #{userBankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null">
+        height = #{height,jdbcType=SMALLINT},
+      </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=SMALLINT},
+      </if>
+      <if test="clothingSize != null">
+        clothing_size = #{clothingSize,jdbcType=VARCHAR},
+      </if>
+      <if test="shoseSize != null">
+        shose_size = #{shoseSize,jdbcType=SMALLINT},
+      </if>
+      <if test="clothingStyle != null">
+        clothing_style = #{clothingStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="myopia != null">
+        myopia = #{myopia,jdbcType=BIT},
+      </if>
+      <if test="threeSize1 != null">
+        three_size1 = #{threeSize1,jdbcType=INTEGER},
+      </if>
+      <if test="threeSize2 != null">
+        three_size2 = #{threeSize2,jdbcType=INTEGER},
+      </if>
+      <if test="threeSize3 != null">
+        three_size3 = #{threeSize3,jdbcType=INTEGER},
+      </if>
+      <if test="job != null">
+        job = #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="monthIncome != null">
+        month_income = #{monthIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="car != null">
+        car = #{car,jdbcType=VARCHAR},
+      </if>
+      <if test="headImg != null">
+        head_img = #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="vipLevel != null">
+        vip_level = #{vipLevel,jdbcType=TINYINT},
+      </if>
+      <if test="vipEndTime != null">
+        vip_end_time = #{vipEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userIcon != null">
+        user_icon = #{userIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfoNum != null">
+        user_info_num = #{userInfoNum,jdbcType=SMALLINT},
+      </if>
+      <if test="infoFinishedNum != null">
+        info_finished_num = #{infoFinishedNum,jdbcType=SMALLINT},
+      </if>
+      <if test="realName != null">
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="xmoney != null">
+        xmoney = #{xmoney,jdbcType=DECIMAL},
+      </if>
+      <if test="freeMoney != null">
+        free_money = #{freeMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="waitingPaybackMoney != null">
+        waiting_payback_money = #{waitingPaybackMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="frozenMoney != null">
+        frozen_money = #{frozenMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawnMoney != null">
+        withdrawn_money = #{withdrawnMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="coinsNum != null">
+        coins_num = #{coinsNum,jdbcType=SMALLINT},
+      </if>
+      <if test="sendingCoins != null">
+        sending_coins = #{sendingCoins,jdbcType=SMALLINT},
+      </if>
+      <if test="userTaskNum != null">
+        user_task_num = #{userTaskNum,jdbcType=SMALLINT},
+      </if>
+      <if test="finishedTaskNum != null">
+        finished_task_num = #{finishedTaskNum,jdbcType=SMALLINT},
+      </if>
+      <if test="invitationCode != null">
+        invitation_code = #{invitationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="invitationUid != null">
+        invitation_uid = #{invitationUid,jdbcType=SMALLINT},
+      </if>
+      <if test="invitationNum != null">
+        invitation_num = #{invitationNum,jdbcType=SMALLINT},
+      </if>
+      <if test="invitationPrize != null">
+        invitation_prize = #{invitationPrize,jdbcType=SMALLINT},
+      </if>
+      <if test="invitationPrizeCoin != null">
+        invitation_prize_coin = #{invitationPrizeCoin,jdbcType=SMALLINT},
+      </if>
+      <if test="wwId != null">
+        ww_id = #{wwId,jdbcType=VARCHAR},
+      </if>
+      <if test="wwLevel != null">
+        ww_level = #{wwLevel,jdbcType=REAL},
+      </if>
+      <if test="wwImg != null">
+        ww_img = #{wwImg,jdbcType=VARCHAR},
+      </if>
+      <if test="wwRefuseReason != null">
+        ww_refuse_reason = #{wwRefuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null">
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardImg != null">
+        id_card_img = #{idCardImg,jdbcType=VARCHAR},
+      </if>
+      <if test="availableDeposit != null">
+        available_deposit = #{availableDeposit,jdbcType=DECIMAL},
+      </if>
+      <if test="sellerFrozenDeposit != null">
+        seller_frozen_deposit = #{sellerFrozenDeposit,jdbcType=DECIMAL},
+      </if>
+      <if test="standMoney != null">
+        stand_money = #{standMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="taobaoScore != null">
+        taobao_score = #{taobaoScore,jdbcType=SMALLINT},
+      </if>
+      <if test="jdScore != null">
+        jd_score = #{jdScore,jdbcType=SMALLINT},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registeTime != null">
+        registe_time = #{registeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="forbiddenTime != null">
+        forbidden_time = #{forbiddenTime,jdbcType=DATE},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="invalidFlag != null">
+        invalid_flag = #{invalidFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenyou.admin.domain.SysUser">
+    update sys_user
+    set user_account = #{userAccount,jdbcType=VARCHAR},
+      user_password = #{userPassword,jdbcType=VARCHAR},
+      pull_money_passwd = #{pullMoneyPasswd,jdbcType=VARCHAR},
+      tb_shop_num = #{tbShopNum,jdbcType=SMALLINT},
+      jd_shop_num = #{jdShopNum,jdbcType=SMALLINT},
+      user_type = #{userType,jdbcType=TINYINT},
+      mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      mail = #{mail,jdbcType=VARCHAR},
+      user_weixin = #{userWeixin,jdbcType=VARCHAR},
+      user_qq = #{userQq,jdbcType=VARCHAR},
+      user_alipay_account = #{userAlipayAccount,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=CHAR},
+      marry_flag = #{marryFlag,jdbcType=TINYINT},
+      user_degree = #{userDegree,jdbcType=VARCHAR},
+      school_name = #{schoolName,jdbcType=VARCHAR},
+      birth_flag = #{birthFlag,jdbcType=BIT},
+      birthday = #{birthday,jdbcType=DATE},
+      constellation = #{constellation,jdbcType=VARCHAR},
+      receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+      receiver_name = #{receiverName,jdbcType=VARCHAR},
+      user_bank_address = #{userBankAddress,jdbcType=VARCHAR},
+      user_bank_name = #{userBankName,jdbcType=VARCHAR},
+      user_bank_account = #{userBankAccount,jdbcType=VARCHAR},
+      height = #{height,jdbcType=SMALLINT},
+      weight = #{weight,jdbcType=SMALLINT},
+      clothing_size = #{clothingSize,jdbcType=VARCHAR},
+      shose_size = #{shoseSize,jdbcType=SMALLINT},
+      clothing_style = #{clothingStyle,jdbcType=VARCHAR},
+      myopia = #{myopia,jdbcType=BIT},
+      three_size1 = #{threeSize1,jdbcType=INTEGER},
+      three_size2 = #{threeSize2,jdbcType=INTEGER},
+      three_size3 = #{threeSize3,jdbcType=INTEGER},
+      job = #{job,jdbcType=VARCHAR},
+      month_income = #{monthIncome,jdbcType=VARCHAR},
+      car = #{car,jdbcType=VARCHAR},
+      head_img = #{headImg,jdbcType=VARCHAR},
+      vip_level = #{vipLevel,jdbcType=TINYINT},
+      vip_end_time = #{vipEndTime,jdbcType=TIMESTAMP},
+      user_icon = #{userIcon,jdbcType=VARCHAR},
+      user_info_num = #{userInfoNum,jdbcType=SMALLINT},
+      info_finished_num = #{infoFinishedNum,jdbcType=SMALLINT},
+      real_name = #{realName,jdbcType=VARCHAR},
+      xmoney = #{xmoney,jdbcType=DECIMAL},
+      free_money = #{freeMoney,jdbcType=DECIMAL},
+      waiting_payback_money = #{waitingPaybackMoney,jdbcType=DECIMAL},
+      frozen_money = #{frozenMoney,jdbcType=DECIMAL},
+      withdrawn_money = #{withdrawnMoney,jdbcType=DECIMAL},
+      coins_num = #{coinsNum,jdbcType=SMALLINT},
+      sending_coins = #{sendingCoins,jdbcType=SMALLINT},
+      user_task_num = #{userTaskNum,jdbcType=SMALLINT},
+      finished_task_num = #{finishedTaskNum,jdbcType=SMALLINT},
+      invitation_code = #{invitationCode,jdbcType=VARCHAR},
+      invitation_uid = #{invitationUid,jdbcType=SMALLINT},
+      invitation_num = #{invitationNum,jdbcType=SMALLINT},
+      invitation_prize = #{invitationPrize,jdbcType=SMALLINT},
+      invitation_prize_coin = #{invitationPrizeCoin,jdbcType=SMALLINT},
+      ww_id = #{wwId,jdbcType=VARCHAR},
+      ww_level = #{wwLevel,jdbcType=REAL},
+      ww_img = #{wwImg,jdbcType=VARCHAR},
+      ww_refuse_reason = #{wwRefuseReason,jdbcType=VARCHAR},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      id_card_img = #{idCardImg,jdbcType=VARCHAR},
+      available_deposit = #{availableDeposit,jdbcType=DECIMAL},
+      seller_frozen_deposit = #{sellerFrozenDeposit,jdbcType=DECIMAL},
+      stand_money = #{standMoney,jdbcType=DECIMAL},
+      taobao_score = #{taobaoScore,jdbcType=SMALLINT},
+      jd_score = #{jdScore,jdbcType=SMALLINT},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      registe_time = #{registeTime,jdbcType=TIMESTAMP},
+      forbidden_time = #{forbiddenTime,jdbcType=DATE},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      invalid_flag = #{invalidFlag,jdbcType=TINYINT}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByType" parameterType="java.lang.Integer" resultType="com.chenyou.admin.domain.SysUser">
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where user_type = #{type,jdbcType=INTEGER}
+    AND invalid_flag = 0
+  </select>
+  <select id="unchecklist"  resultType="com.chenyou.admin.domain.SysUser">
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where user_type = 2
+    AND invalid_flag = 0
+    AND refuse_reason IS NULL
+  </select>
+  <select id="uncheckdata" parameterType="Map" resultType="com.chenyou.admin.domain.SysUser">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user
+    WHERE user_type = 2
+    AND refuse_reason IS NULL
+    ORDER BY uid
+    <if test="page != null">
+      LIMIT #{page},#{size}
+    </if>
+  </select>
+  <select id="findAll" parameterType="Map" resultType="com.chenyou.admin.domain.SysUser">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user
+    WHERE user_type = 2
+    AND vip_level= 1
+    ORDER BY uid
+    <if test="page != null">
+      LIMIT #{page},#{size}
+    </if>
+  </select>
+  <select id="findAllVip" parameterType="Map" resultType="com.chenyou.admin.domain.SysUser">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user
+    WHERE user_type = 2
+    AND vip_level> 1
+    <if test="search!=''">
+      AND uid LIKE CONCAT(CONCAT('%', #{search}),'%') OR sys_user.user_account LIKE  CONCAT(CONCAT('%', #{search}),'%')
+    </if>
+    ORDER BY uid
+    <if test="page != null">
+      LIMIT #{page},#{size}
+    </if>
+  </select>
+  <select id="getTotal"  resultType="int">
+    SELECT count(*) FROM sys_user
+    where user_type = 2
+    AND invalid_flag = 0
+    AND vip_level= 1
+  </select>
+  <select id="getTotalVip"  resultType="int">
+    SELECT count(*) FROM sys_user
+    where user_type = 2
+    AND invalid_flag = 0
+    AND vip_level> 1
+  </select>
+  <select id="uncheckdataTotal"  resultType="int">
+    SELECT count(*) FROM sys_user
+    where user_type = 2
+    AND invalid_flag = 0
+    AND refuse_reason IS NULL
+  </select>
+ <!-- <select id="queryEmp"  resultType="cn.test.entity.Emp">
+    select * from emp where 1=1
+    <if test="deptNo!=null">
+      and deptno=#{deptNO}
+    </if>
+    <if test="deptName!=null">
+      and deptno=#{deptName}
+    </if>
+  </select>-->
+  <update id="updateFrozen" parameterType="map">
+    UPDATE sys_user SET
+    seller_frozen_deposit = seller_frozen_deposit + #{frozenDeposit}
+    WHERE uid = #{uid}
+  </update>
+
+  <select id="findAllByPage" resultType="com.chenyou.admin.domain.SysUser">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user
+    limit #{page}, #{pageSize}
+  </select>
+</mapper>

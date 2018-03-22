@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns="http://www.w3.org/1999/html" layout:decorator="layout">
+<head>
+    <title></title>
+    <style>
+        .hasError{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" layout:fragment="content">
+    <section class="content-header">
+        <h1>试客买号列表</h1>
+    </section>
+    <section class="content">
+        <div class="col-md-12 form-group">
+            <div id="toolbar" class="btn-group">
+                <div style="margin-top:3px;">
+                    <button id="btn_add" type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-add" aria-hidden="true">增加</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <table id="table" class="table table-striped table-hover"></table>
+    </section>
+    <!-- 模态框（Modal）start  -->
+    <div class="modal fade" id="modalDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="tform" action="/buy_account/approve_by_id" class="form-horizontal" th:method="POST">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="dialogTitle"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="id" name="id" />
+                        <div class="form-group">
+                            <label for="comment" class="col-sm-3 control-label">通过说明:</label>
+                            <div class="col-sm-8">
+                                <input  class="form-control"  name="comment"  id="comment" placeholder="通过说明，可不填" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="refuseComment" class="col-sm-3 control-label">拒绝原因:</label>
+                            <div class="col-sm-8">
+                                <input  class="form-control"  name="refuseComment"  id="refuseComment" placeholder="拒绝说明， 可不填" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">操作:</label>
+                            <div class="col-sm-8">
+                                <input type="radio" id="bstatus1" name="bstatus" th:value="1" /><label for="bstatus1">通过</label>
+                                <input type="radio" id="bstatus2" name="bstatus" th:value="2" /><label for="bstatus2">不通过</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" id="tsubmit" class="btn btn-success" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框（Modal）end  -->
+
+</div>
+<div style="display: none;" layout:fragment="script">
+    <!-- form validate -->
+    <script src="https://cdn.bootcss.com/jquery-validate/1.16.0/jquery.validate.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-validate/1.16.0/localization/messages_zh.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.js"></script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+        $(document).on('click', '.approve', function(){
+            var approveID = $(this).attr("attr-id");
+            var comment = $(this).attr("comment");
+            var refuseComment = $(this).attr("refuseComment");
+            $("#tform #id").val(approveID);
+            $("#tform #comment").val(comment);
+            $("#tform #refuseComment").val(refuseComment);
+            $("#dialogTitle").text("审核买号");
+            $('#modalDialog').modal({backdrop: 'static', keyboard: false, show: true});
+        });
+
+
+        $("#tform").validate({
+            rules: {
+                bstatus:{required: true}
+            },
+            errorClass: "hasError"
+        });
+
+        var height = $(window).width() <= 767 ? $(window).height() - 115 : $(window).height() - 80;
+        $('#table').bootstrapTable({
+            url: '/buy_account/data_list',
+            striped: true,  //表格显示条纹
+            pagination: true, //启动分页
+            paginationLoop: false, //
+            pageSize: 50,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [50, 100, 200],  //记录数可选列表
+            search: false,  //是否启用查询
+            sortable: false, //是否启用排序
+            showHeader: true, //
+            showFooter: false, //
+            singleSelect: true, //
+            toolbar: '#toolbar', //
+            stickyHeader: true, // 是否固定表头
+            sidePagination: "server", //表示服务端请求
+            queryParamsType: "undefined",// limit or undefined
+            queryParams: function queryParams(params) {  //设置查询参数
+                var param = {
+                    // 这里是在ajax发送请求的时候设置一些参数 params有什么东西，自己看看源码就知道了
+                    page: params.pageNumber - 1,
+                    size: params.pageSize
+                };
+                return param;
+            },
+            detailView : true,
+            detailFormatter : function (index, row) {
+                var bstatus = "";
+                if (row.bstatus == 0) {
+                    bstatus = "买号审核中";
+                } else if (row.bstatus == 1) {
+                    bstatus = "通过审核";
+                } else if (row.bstatus == 2) {
+                    bstatus = "未通过审核";
+                }
+                var view =
+                    '<div class="panel panel-info">'
+                    + '<div class="panel-heading">'
+                    + '<h3 class="panel-title" style="display: inline-block;">基本信息</h3>'
+                    + '<a href="/buy_account/account_info?id='+ row.id +'">查看详情</a>'
+                    + '<a class="approve" comment="'+ row.comment +'" refuseComment="'+ row.refuseComment +'" attr-id="'+ row.id +'" href="javascript:void(0);">审核买号</a>'
+                    + '</div>'
+                    + '<div class="panel-body">'
+                    + '<div class="col-md-6">'
+                    + '<div><label style="float: left;">审核状态:</label><p style="padding-left: 70px;height: 20px">'+ bstatus +'</p></div>'
+                    + '<div><label style="float: left">用户id:</label><p style="padding-left: 70px;height: 20px">'+ row.uid +'</p></div>'
+                    + '<div><label style="float: left">用户账号:</label><p style="padding-left: 70px;height: 20px">'+ row.userAccount +'</p></div>'
+                    + '<div><label style="float: left">平台:</label><p style="padding-left: 70px;height: 20px">'+ row.platformName  +'</p></div>'
+                    + '<div><label style="float: left">试客买号:</label><p style="padding-left: 70px;height: 20px">'+ row.buyAccount +'</p></div>'
+                    + '<div><label style="float: left">买号等级:</label><p style="padding-left: 70px;height: 20px">'+ row.accountLevel +'</p></div>'
+                    + '</div>'
+                    + '<div class="col0md-6">'
+                    + '<div><label style="float: left">买号截图:</label><img alt="买号截图" src="'+ row.accountImg +'" /></div>'
+                    + '</div>'
+                    + '</div>'
+                    + '</div>';
+                return view;
+            },
+            columns: [
+//                {checkbox: true, align: 'center', valign: 'middle'},
+                {field: 'id', title: 'id', align: 'center', valign: 'middle', visible: false},
+                {field: 'uid', title: '用户ID', align: 'center', valign: 'middle'},
+                {field: 'userAccount', title: '用户账号', align: 'center', valign: 'middle'},
+                {field: 'buyAccount', title: '试客买号', align: 'left', valign: 'middle'},
+                {field: 'platformName', title: '平台', align: 'center', valign: 'middle'},
+                {field: 'accountLevel', title: '买号等级', align: 'center', valign: 'middle'},
+                {field: 'refuseComment', title: '拒绝原因', align: 'center', valign: 'middle'},
+                {field: 'bstatus', title: '审核状态', align: 'center', valign: 'middle',
+                    formatter: function(value, row, index){
+                        if (value == 0) {
+                            return "买号审核中";
+                        } else if (value == 1) {
+                            return "通过审核";
+                        } else if (value == 2) {
+                            return "未通过审核";
+                        }
+                    }
+                },
+                {field: 'invalidFlag', title: '状态', align: 'center', valign: 'middle',
+                    formatter: function(value, row, index){
+                        return "<label class='"+ (value == 1? "label-danger" : "label-success") +"'>"+ (value == 1? "禁用" : "正常") +"</label>";
+                    }
+                },
+                {field: 'addTime', title: '添加时间', align: 'center', valign: 'middle'}
+            ]
+        });
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

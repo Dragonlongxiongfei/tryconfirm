@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.GdTaskDao">
+
+    <sql id="selectTask">
+        t.task_id AS taskId, t.goods_id AS goodsId, t.goods_name AS goodsName, t.goods_parent_class AS goodsParentClass,
+        t.goods_child_class AS goodsChildClass, t.seller_uid AS sellerUid, t.seller_name AS sellerName, t.goods_price AS goodsPrice,
+        t.goods_img AS goodsImg, t.coins_return AS  coinsReturn, t.cash_return AS cashReturn, t.uid AS uid, t.user_account AS userAccount,
+        t.buy_account AS buyAccount, t.goods_url AS goodsUrl, t.goods_collection_img AS goodsCollectionImg,
+        t.shop_collection_img AS shopCollectionImg, t.other_shop_url AS otherShopUrl, t.first_day_begin AS firstDayBegin,
+        t.first_day_end AS firstDayEnd, t.second_day_begin AS secondDayBegin, t.second_day_end AS secondDayEnd,
+        t.third_day_begin AS thirdDayBegin, t.third_day_end AS thirdDayEnd, t.prize_time AS prizeTime, t.touch_prize_time AS touchPrizeTime,
+        t.order_time AS orderTime, t.order_confirm_time AS orderConfirmTime, t.goods_comment AS goodsComment,
+        t.comment_img AS commentImg, t.comment_callback_img AS commentCallbackImg, t.comment_time AS commentTime, t.comment_pass_flag AS commentPassFlag, t.comment_confirm_time AS commentConfirmTime,
+        t.comment_copy_time AS commentCopyTime, t.task_approve_time AS taskApproveTime, t.confirm_four_url AS confirmFourUrl,
+        t.trade_no AS tradeNo, t.trade_img AS tradeImg, t.trade_money AS tradeMoney, t.talk_img AS talkImg,
+        t.give_up_reason AS giveUpReason, t.task_status AS taskStatus, t.prize_flag AS prizeFlag,
+        t.add_time AS addTime, t.invalid_flag AS invalidFlag
+    </sql>
+    <sql id="selectGoods">
+        g.goods_id AS g_goods_id, g.uid AS g_uid, g.goods_name AS g_goods_name, g.goods_title AS g_goods_title,
+        g.goods_price AS g_goods_prize, g.goods_discount AS g_goods_discount, g.goods_num AS g_goods_num,
+        g.exchange_num AS g_exchange_num, g.prize_num AS g_prize_num, g.exchanged_num AS g_exchanged_num,
+        g.apply_num AS g_apply_num, g.prize_limit AS g_prize_limit, g.size AS g_size, g.goods_img AS g_goods_img,
+        g.search_result_img AS g_search_result_img, g.free_mail AS g_free_mail, g.coins_price AS g_coins_price,
+        g.store_id AS g_store_id, g.store_name AS g_store_name, g.platform AS g_platform, g.goods_url AS g_goods_url, g.goods_ra_code AS g_goods_ra_code,
+        g.nature_search AS g_nature_search, g.search_keywords AS g_search_keywords, g.upload_nice_comment_flag AS g_upload_nice_comment_flag,
+        g.guanjianci AS g_guanjianci, g.guanjianci_flag AS g_guanjianci_flag, g.haoping_flag AS g_haoping_flag, g.tuwen_flag AS g_tuwen_flag
+    </sql>
+    <resultMap id="taskMap" type="com.chenyou.admin.domain.GdTask">
+        <id property="taskId" column="taskId"/>
+        <result property="goodsId" column="goodsId"/>
+        <result property="goodsName" column="goodsName"/>
+        <result property="goodsParentClass" column="goodsParentClass"/>
+        <result property="goodsChildClass" column="goodsChildClass"/>
+        <result property="sellerUid" column="sellerUid"/>
+        <result property="sellerName" column="sellerName"/>
+        <result property="goodsPrice" column="goodsPrice"/>
+        <result property="goodsImg" column="goodsImg"/>
+        <result property="coinsReturn" column="coinsReturn"/>
+        <result property="cashReturn" column="cashReturn"/>
+        <result property="uid" column="uid"/>
+        <result property="userAccount" column="userAccount"/>
+        <result property="buyAccount" column="buyAccount"/>
+        <result property="goodsUrl" column="goodsUrl"/>
+        <result property="goodsCollectionImg" column="goodsCollectionImg"/>
+        <result property="shopCollectionImg" column="shopCollectionImg"/>
+        <result property="otherShopUrl" column="otherShopUrl"/>
+        <result property="firstDayBegin" column="firstDayBegin"/>
+        <result property="firstDayEnd" column="firstDayEnd"/>
+        <result property="secondDayBegin" column="secondDayBegin"/>
+        <result property="secondDayEnd" column="secondDayEnd"/>
+        <result property="thirdDayBegin" column="thirdDayBegin"/>
+        <result property="thirdDayEnd" column="thirdDayEnd"/>
+        <result property="prizeTime" column="prizeTime"/>
+        <result property="touchPrizeTime" column="touchPrizeTime"/>
+        <result property="orderTime" column="orderTime"/>
+        <result property="orderConfirmTime" column="orderConfirmTime"/>
+        <result property="goodsComment" column="goodsComment"/>
+        <result property="commentImg" column="commentImg"/>
+        <result property="commentCallbackImg" column="commentCallbackImg"/>
+        <result property="commentTime" column="commentTime"/>
+        <result property="commentPassFlag" column="commentPassFlag"/>
+        <result property="commentConfirmTime" column="commentConfirmTime"/>
+        <result property="commentCopyTime" column="commentCopyTime"/>
+        <result property="taskApproveTime" column="taskApproveTime"/>
+        <result property="confirmFourUrl" column="confirmFourUrl"/>
+        <result property="tradeNo" column="tradeNo"/>
+        <result property="tradeImg" column="tradeImg"/>
+        <result property="tradeMoney" column="tradeMoney"/>
+        <result property="talkImg" column="talkImg"/>
+        <result property="giveUpReason" column="giveUpReason"/>
+        <result property="taskStatus" column="taskStatus"/>
+        <result property="prizeFlag" column="prizeFlag"/>
+        <result property="addTime" column="addTime"/>
+        <result property="invalidFlag" column="invalidFlag"/>
+        <association property="gdGoods" resultMap="goodsMap"/>
+    </resultMap>
+    <resultMap id="goodsMap" type="com.chenyou.admin.domain.GdGoods">
+        <id property="goodsId" column="g_goods_id"/>
+        <result property="uid" column="g_uid"/>
+        <result property="goodsName" column="g_goods_name"/>
+        <result property="goodsTitle" column="g_goods_title"/>
+        <result property="goodsPrice" column="g_goods_prize"/>
+        <result property="goodsDiscount" column="g_goods_discount"/>
+        <result property="goodsNum" column="g_goods_num"/>
+        <result property="exchangeNum" column="g_exchange_num"/>
+        <result property="prizeNum" column="g_prize_num"/>
+        <result property="exchangedNum" column="g_exchanged_num"/>
+        <result property="applyNum" column="g_apply_num"/>
+        <result property="prizeLimit" column="g_prize_limit"/>
+        <result property="productsize" column="g_size"/>
+        <result property="goodsImg" column="g_goods_img"/>
+        <result property="searchResultImg" column="g_search_result_img"/>
+        <result property="freeMail" column="g_free_mail"/>
+        <result property="coinsPrice" column="g_coins_price"/>
+        <result property="storeId" column="g_store_id"/>
+        <result property="storeName" column="g_store_name"/>
+        <result property="platform" column="g_platform"/>
+        <result property="goodsUrl" column="g_goods_url"/>
+        <result property="goodsRaCode" column="g_goods_ra_code"/>
+        <result property="natureSearch" column="g_nature_search"/>
+        <result property="searchKeywords" column="g_search_keywords"/>
+        <result property="uploadNiceCommentFlag" column="g_upload_nice_comment_flag" jdbcType="TINYINT" javaType="boolean"/>
+        <result property="guanjianci" column="g_guanjianci"/>
+        <result property="guanjianciFlag" column="g_guanjianci_flag"/>
+        <result property="haopingFlag" column="g_haoping_flag"/>
+        <result property="tuwenFlag" column="g_tuwen_flag"/>
+    </resultMap>
+
+
+    <update id="approveTask" parameterType="map" >
+        UPDATE gd_task SET task_status = 6 , task_approve_time = now() WHERE comment_callback_img  IS NOT NULL AND task_id = #{taskId}
+    </update>
+    <select id="getApproveTask" resultType="com.chenyou.admin.domain.GdTask" parameterType="map">
+        SELECT <include refid="selectTask" /> , <include refid="selectGoods" />
+        FROM
+        gd_task t LEFT JOIN gd_goods g
+        ON t.goods_id = g.goods_id
+        WHERE
+        t.prize_flag = 1
+        and t.order_time IS NOT NULL
+        and t.order_confirm_time IS NOT NULL
+        and t.comment_time IS NOT NULL
+        and t.comment_callback_img IS NOT NULL
+        and t.comment_confirm_time IS NOT NULL
+        and t.comment_copy_time IS NOT NULL
+        and t.task_status = 5
+        ORDER BY t.task_id DESC
+        LIMIT #{page},#{size}
+    </select>
+    <select id="findByTaskId" resultType="com.chenyou.admin.domain.GdTask" parameterType="string">
+        SELECT <include refid="selectTask" /> , <include refid="selectGoods" />
+        FROM
+        gd_task t LEFT JOIN gd_goods g
+        ON t.goods_id = g.goods_id
+        WHERE
+        t.task_id = #{taskId}
+    </select>
+    <select id="getApproveTaskCount" resultType="int" parameterType="map">
+        SELECT COUNT(t.task_id)
+        FROM
+        gd_task t LEFT JOIN gd_goods g
+        ON t.goods_id = g.goods_id
+        WHERE
+        t.prize_flag = 1
+        and t.order_time IS NOT NULL
+        and t.order_confirm_time IS NOT NULL
+        and t.comment_time IS NOT NULL
+        and t.comment_callback_img IS NOT NULL
+        and t.comment_confirm_time IS NOT NULL
+        and t.comment_copy_time IS NOT NULL
+        and t.task_status = 5
+    </select>
+    <!-- 查询待中奖的任务 -->
+    <select id="findLotteryTasks" resultType="com.chenyou.admin.domain.GdTask">
+        SELECT
+            <include refid="selectTask" />, <include refid="selectGoods" />
+        FROM
+            gd_task t LEFT JOIN gd_goods g
+            ON t.goods_id = g.goods_id
+        WHERE
+            t.goods_id = #{goods_id}
+            and t.prize_flag = 0
+            and t.task_status <![CDATA[<]]> 3
+            and (t.first_day_end is not null || t.second_day_end is not null || t.third_day_end is not null)
+    </select>
+    <!-- 批量更新 -->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <if test="list != null and list.size != 0">
+            <foreach collection="list" separator=";" item="task" close=";">
+                UPDATE gd_task SET
+                prize_time = #{task.prizeTime},
+                prize_flag = #{task.prizeFlag},
+                task_status = #{task.taskStatus},
+                touch_prize_time = #{task.touchPrizeTime}
+                WHERE task_id = #{task.taskId}
+            </foreach>
+        </if>
+    </update>
+    <update id="updateTask" parameterType="com.chenyou.admin.domain.GdTask">
+        UPDATE gd_task
+        <set>
+            <if test="goodsUrl != null and goodsUrl != ''">
+                goods_url = #{goodsUrl},
+            </if>
+            <if test="goodsCollectionImg != null and goodsCollectionImg != ''">
+                goods_collection_img = #{goodsCollectionImg},
+            </if>
+            <if test="shopCollectionImg != null and shopCollectionImg != ''">
+                shop_collection_img = #{shopCollectionImg},
+            </if>
+            <if test="otherShopUrl != null and otherShopUrl != ''">
+                other_shop_url = #{otherShopUrl},
+            </if>
+            <if test="firstDayEnd != null and firstDayEnd != ''">
+                first_day_end = #{firstDayEnd},
+            </if>
+            <if test="secondDayBegin != null and secondDayBegin != ''">
+                second_day_begin = #{secondDayBegin},
+            </if>
+            <if test="secondDayEnd != null and secondDayEnd != ''">
+                second_day_end = #{secondDayEnd},
+            </if>
+            <if test="thirdDayBegin != null and thirdDayBegin != ''">
+                third_day_begin = #{thirdDayBegin},
+            </if>
+            <if test="thirdDayEnd != null and thirdDayEnd != ''">
+                third_day_end = #{thirdDayEnd},
+            </if>
+            <if test="orderTime != null and orderTime != ''">
+                order_time = #{orderTime},
+            </if>
+            <if test="orderConfirmTime != null and orderConfirmTime != ''">
+                order_confirm_time = #{orderConfirmTime},
+            </if>
+            <if test="commentConfirmTime != null and commentConfirmTime != ''">
+                comment_confirm_time = #{commentConfirmTime},
+            </if>
+            <if test="commentPassFlag != null and commentPassFlag != ''">
+                comment_pass_flag = #{commentPassFlag},
+            </if>
+            <if test="taskApproveTime != null and taskApproveTime != ''">
+                task_approve_time = #{taskApproveTime},
+            </if>
+            <if test="goodsComment != null and goodsComment != ''">
+                goods_comment = #{goodsComment},
+            </if>
+            <if test="commentImg != null and commentImg != ''">
+                comment_img = #{commentImg},
+            </if>
+            <if test="commentCallbackImg != null and commentCallbackImg != ''">
+                comment_callback_img = #{commentCallbackImg},
+            </if>
+            <if test="commentTime != null and commentTime != ''">
+                comment_time = #{commentTime},
+            </if>
+            <if test="commentCopyTime != null and commentCopyTime != ''">
+                comment_copy_time = #{commentCopyTime},
+            </if>
+            <if test="confirmFourUrl != null and confirmFourUrl != ''">
+                confirm_four_url = #{confirmFourUrl},
+            </if>
+            <if test="tradeNo != null and tradeNo != ''">
+                trade_no = #{tradeNo},
+            </if>
+            <if test="tradeImg != null and tradeImg != ''">
+                trade_img = #{tradeImg},
+            </if>
+            <if test="tradeMoney != null and tradeMoney != ''">
+                trade_money = #{tradeMoney},
+            </if>
+            <if test="talkImg != null and talkImg != ''">
+                talk_img = #{talkImg},
+            </if>
+            <if test="taskStatus != null and taskStatus != ''">
+                task_status = #{taskStatus},
+            </if>
+            <if test="prizeFlag != null">
+                prize_flag = #{prizeFlag},
+            </if>
+            <if test="giveUpReason != null">
+                give_up_reason = #{giveUpReason},
+            </if>
+        </set>
+        WHERE
+        task_id = #{taskId}
+    </update>
+</mapper>

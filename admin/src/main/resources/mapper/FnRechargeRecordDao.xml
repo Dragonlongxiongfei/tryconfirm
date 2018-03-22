@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.FnRechargeRecordDao">
+
+    <select id="findListByPage" parameterType="Map" resultType="com.chenyou.admin.domain.FnRechargeRecord">
+      SELECT * FROM fn_recharge_record ORDER BY pay_finish_time DESC
+        <where>
+            <if test="uid != null and uid != ''">
+              uid = #{uid}
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+              user_account = #{userAccount}
+            </if>
+            <if test="charType != null and charType != ''">
+              char_type = #{charType}
+            </if>
+            <if test="page != null and page != ''">
+                LIMIT #{page}, #{size}
+            </if>
+        </where>
+    </select>
+    <select id="findList" parameterType="Map" resultType="com.chenyou.admin.domain.FnRechargeRecord">
+        SELECT * FROM fn_recharge_record ORDER BY pay_finish_time DESC
+        <where>
+            <if test="uid != null and uid != ''">
+                uid = #{uid}
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+                user_account = #{userAccount}
+            </if>
+            <if test="charType != null and charType != ''">
+                char_type = #{charType}
+            </if>
+        </where>
+    </select>
+
+    <select id="findTotal" parameterType="Map" resultType="Integer">
+        SELECT COUNT(id) FROM fn_recharge_record
+        <where>
+            <if test="uid != null and uid != ''">
+                uid = #{uid}
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+                user_account = #{userAccount}
+            </if>
+            <if test="charType != null and charType != ''">
+                char_type = #{charType}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertSelective" parameterType="com.chenyou.admin.domain.FnRechargeRecord">
+        INSERT INTO fn_recharge_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="uid != null">
+                uid,
+            </if>
+            <if test="userAccount != null">
+                user_account,
+            </if>
+            <if test="charType != null">
+                char_type,
+            </if>
+            <if test="charMoney != null">
+                char_money,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="payAccount != null">
+                pay_account,
+            </if>
+            <if test="payNo != null">
+                pay_no,
+            </if>
+            <if test="payFinishTime != null">
+                pay_finish_time,
+            </if>
+            <if test="comment != null">
+                comment,
+            </if>
+            <if test="addTime != null">
+                add_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="uid != null">
+                #{uid},
+            </if>
+            <if test="userAccount != null">
+                #{userAccount},
+            </if>
+            <if test="charType != null">
+                #{charType},
+            </if>
+            <if test="charMoney != null">
+                #{charMoney},
+            </if>
+            <if test="payType != null">
+                #{payType},
+            </if>
+            <if test="payAccount != null">
+                #{payAccount},
+            </if>
+            <if test="payNo != null">
+                #{payNo},
+            </if>
+            <if test="payFinishTime != null">
+                #{payFinishTime},
+            </if>
+            <if test="comment != null">
+                #{comment},
+            </if>
+            <if test="addTime != null">
+                #{addTime}
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

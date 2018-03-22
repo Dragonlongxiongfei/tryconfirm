@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"  layout:decorator="layout" contentType="UTF-8">
+<head>
+    <title></title>
+    <style type="text/css">
+        html input[disabled]{
+            background-color: #ececec;
+        }
+        .form-horizontal .control-group {
+            margin-bottom: 14px;
+        }
+        .heading {
+            border-bottom: 1px solid #dcdcdc;
+            margin-bottom: 18px;
+            padding-bottom: 5px;
+            padding-left: 10px;
+        }
+        .formSep {
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #dcdcdc;
+        }
+        .form-horizontal .control-label {
+            float: left;
+            width: 130px;
+            padding-top: 5px;
+            text-align: right;
+        }
+        .form-horizontal .controls {
+            margin-left: 30px;
+            padding-left: 130px;
+            margin-bottom: 0px;
+        }
+        select {
+            height: auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px;
+            line-height: 20px;
+        }
+        .input_text {
+            height: 24px;
+            padding: 0px 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #555;
+            vertical-align: middle;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            -webkit-transition: border linear .2s, box-shadow linear .2s;
+            -moz-transition: border linear .2s, box-shadow linear .2s;
+            -o-transition: border linear .2s, box-shadow linear .2s;
+            transition: border linear .2s, box-shadow linear .2s;
+        }
+        .form-horizontal .controls span {
+            color: #666;
+            padding-left: 10px;
+        }
+        ul, ol {
+            padding: 0;
+            margin: 0;
+            display: block;
+            list-style: none;
+        }
+        .span30{
+            width: 30%;
+        }
+
+        ol, ul {
+            list-style: none;
+        }
+        .has-error{
+            color: #c73222!important;
+        }
+    </style>
+
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" layout:fragment="content">
+    <section class="content-header">
+        <h1 id="pageTitle">商家充值</h1>
+    </section>
+    <section class="content">
+        <form id="tf" class="form-horizontal" method="post" action="/seller/chongzhi">
+            <div >
+                <!-- 充值信息开始 -->
+                <h3>充值</h3>
+                <section>
+                    <div class="control-group formSep">
+                        <label class="control-label">用户</label>
+                        <div class="controls">
+                            <input name="userAccount" disabled="disabled" id="userAccount" class="input_text" placeholder="广告名称" style="width: 400px;" th:value="${sysUserSeller.uid + '-' + sysUserSeller.userAccount}" />
+                            <input type="hidden" id="uid" th:value="${sysUserSeller.uid}" />
+                        </div>
+                    </div>
+                    <!--<div class="control-group formSep">
+                        <label class="control-label">用户头像</label>
+                        <div class="controls">
+                            <img th:src="${sysUserSeller.headImg}" style="height: 60px;" alt="用户头像" title="用户头像"/>
+                        </div>
+                    </div>-->
+                    <div class="control-group formSep">
+                        <label class="control-label">真实姓名</label>
+                        <div class="controls">
+                            <input disabled="disabled" class="input_text" placeholder="真实姓名" style="width: 400px;" th:value="${sysUserSeller.realName}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">手机号</label>
+                        <div class="controls">
+                            <input disabled="disabled" class="input_text" placeholder="手机号" th:value="${sysUserSeller.mobilePhone}" />
+                        </div>
+                    </div>
+                   <!-- <div class="control-group formSep">
+                        <label class="control-label">邮箱</label>
+                        <div class="controls">
+                            <input disabled="disabled" class="input_text" placeholder="邮箱" th:value="${sysUserSeller.mail}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">微信</label>
+                        <div class="controls">
+                            <input disabled="disabled" class="input_text" placeholder="微信" th:value="${sysUserSeller.userWeiXin}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">QQ</label>
+                        <div class="controls">
+                            <input disabled="disabled" class="input_text" placeholder="QQ" th:value="${sysUserSeller.userQQ}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">支付宝</label>
+                        <div class="controls">
+                            <input disabled="disabled" class="input_text" placeholder="支付宝" th:value="${sysUserSeller.userAliPay}" />
+                        </div>
+                    </div>-->
+                    <!--<div class="control-group formSep">
+                        <label class="control-label">vip等级</label>
+                        <div class="controls">
+                            <input name="vipLevel" id="vipLevel" disabled="disabled" class="input_text" placeholder="vip等级"  th:value="${sysUserSeller.vipLevel}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">vip截止时间</label>
+                        <div class="controls">
+                            <input name="vipEndTime" id="vipEndTime" disabled="disabled" class="input_text" placeholder="vip截止时间"  th:value="${sysUserSeller.vipEndTime}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">充值项目</label>
+                        <div class="controls">
+                            <select>
+                                <option>充值金币</option>
+                                <option id="vipLevel" name="vipLevel" value="2" >充值VIP</option>
+                                <option id="vipLevel" name="vipLevel" value="3" >充值超级VIP</option>
+                                <option >兑换金币</option>
+                            </select>
+                            &lt;!&ndash;<input name="forbiddenTime" id="forbiddenTime"  class="input_text date" placeholder="禁止登录时间"  th:value="${sysUserSeller.forbiddenTime}" />&ndash;&gt;
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">年限</label>
+                        <div class="controls">
+                            <select>
+                                <option>1年</option>
+                                <option>2年</option>
+                                <option>3年</option>
+                            </select>
+                            &lt;!&ndash;<input name="forbiddenTime" id="forbiddenTime"  class="input_text date" placeholder="禁止登录时间"  th:value="${sysUserSeller.forbiddenTime}" />&ndash;&gt;
+                        </div>
+                    </div>-->
+                    <div class="control-group formSep">
+                        <label class="control-label">充值项目</label>
+                        <div class="controls">
+                            <select id="xuanze">
+                                <option>充值现金</option>
+                                <option>充值金币</option>
+                                <option>充值1年VIP</option>
+                                <option>充值2年VIP</option>
+                                <option>充值3年VIP</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">VIP截止时间</label>
+                        <div class="controls">
+                            <input name="vipEndTime" id="vipEndTime"  class="input_text date" placeholder="VIP截止时间"  th:value="${sysUserSeller.vipEndTime}" />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">金额</label>
+                        <div class="controls">
+                            <input name="price" id="price"   placeholder="金额"  class="input_text"  />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">支付来源类型</label>
+                        <div class="controls">
+                            <select id="payType">
+                                <option value="1">支付宝</option>
+                                <option value="2">微信</option>
+                                <option value="3">银联</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">支付来源账号</label>
+                        <div class="controls">
+                            <input name="payAccount" id="payAccount"   placeholder="支付来源账号"  class="input_text"  />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">流水号</label>
+                        <div class="controls">
+                            <input name="payNo" id="payNo"   placeholder="流水号"  class="input_text"  />
+                        </div>
+                    </div>
+                    <div class="control-group formSep">
+                        <label class="control-label">到账时间</label>
+                        <div class="controls">
+                            <input name="payFinishTime" id="payFinishTime"   placeholder="到账时间"  class="input_text datetime"  />
+                        </div>
+                    </div>
+                </section>
+                <!-- 充值信息结束 -->
+
+            </div>
+            <!-- 提交按钮 -->
+        </form>
+        <div class="control-group" style="height:50px; margin-left: 170px;">
+            <div class="controls">
+                <button class="btn btn-primary" id="f_submit">充值</button>
+                <button class="btn btn-danger" id="forbid" >取消</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div style="display: none;" layout:fragment="script">
+    <!-- form validate -->
+    <script src="https://cdn.bootcss.com/jquery-validate/1.16.0/jquery.validate.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.js"></script>
+    <script src="/plugins/jquery-step/jquery-step.js"></script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+        $("#jquery-tabs").steps({
+            headerTag: "h3",
+            bodyTag: "section",
+            transitionEffect: "slideLeft",
+            enableFinishButton: false,
+            enablePagination: false,
+            enableAllSteps: true,
+            titleTemplate: "#title#",
+            cssClass: "tabcontrol"
+        });
+
+        $("#vipEndTime").datepicker({
+            language : 'zh-CN',
+            todayBtn: "linked",
+            clearBtn: true,// 自定义属性,true 显示 清空按钮 false 隐藏 默认:true
+            format: "yyyy-mm-dd",
+            keyboardNavigation: true,
+            forceParse: false,
+            calendarWeeks: false,
+            autoclose: true
+        });
+        $("#payFinishTime").datepicker({
+            language : 'zh-CN',
+            todayBtn: "linked",
+            clearBtn: true,// 自定义属性,true 显示 清空按钮 false 隐藏 默认:true
+            format: "yyyy-mm-dd",
+            keyboardNavigation: true,
+            forceParse: false,
+            calendarWeeks: false,
+            autoclose: true
+        });
+
+        $("#forbid").on('click', function(){
+            if(!confirm("是否要取消充值？")){
+                return;
+            }
+            window.location.href="/seller/sellerlist";
+           /* $.ajax({
+                type: 'GET',
+                url: '/seller/sellerlist'
+            });*/
+        });
+        $("#f_submit").on('click', function(){
+            if (!confirm("您是否确定要充值？"+$("#price").val()+"元"))
+                return;
+            $.ajax({
+                type: 'POST',
+                url: '/seller/chongzhi',
+                async: true,
+                data: {uid: $("#uid").val(),price:$("#price").val(),xuanze:$("#xuanze").val(),vipEndTime:$("input[name='vipEndTime']").val(),payType:$("#payType").val(),payNo:$("#payNo").val(),payFinishTime:$("#payFinishTime").val(),payAccount:$("#payAccount").val()},
+                success: function(data){
+                    alert("success");
+                    window.location.href="/seller/sellerlist";
+                },
+                error: function(){alert("submit error")
+                    window.location.href="/seller/sellerlist";}
+            });
+
+
+
+        });
+
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

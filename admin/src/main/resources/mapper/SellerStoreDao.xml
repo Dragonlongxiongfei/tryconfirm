@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.SellerStoreDao">
+    <sql id="BASE_RESULT">
+        store_id AS storeId,
+        uid AS uId,
+        store_url AS storeUrl,
+        store_name AS storeName,
+        xinyu AS xinyu,
+        jindong_xinyu AS jindongXinyu,
+        platform AS platform,
+        good_url AS goodUrl,
+        good_price AS goodPrice,
+        category_id AS categoryId,
+        store_QQ AS storeQQ,
+        store_weixin AS storeWeixin,
+        store_phone AS storePhone,
+        add_time AS addTime,
+        invalid_flag AS invalidFlag
+    </sql>
+
+    <select id="findAll" parameterType="Map" resultType="com.chenyou.admin.domain.SellerStore">
+        SELECT <include refid="BASE_RESULT"/>
+        FROM seller_store
+        WHERE invalid_flag  = 0
+        <if test="storeId !=null and storeId !=''">
+            AND store_id = #{storeId}
+        </if>
+        <if test="uId !=null and uId !=''">
+            AND uid = #{uId}
+        </if>
+        <if test="withInvalid !=null and withInvalid !=''">
+            OR invalid_flag = #{withInvalid}
+        </if>
+        <if test="page != null">
+            LIMIT #{page}, #{size}
+        </if>
+    </select>
+
+    <select id="getTotal" parameterType="Map" resultType="int">
+        SELECT count(*)
+        FROM seller_store
+        WHERE invalid_flag  = 0
+        <if test="storeId !=null and storeId !=''">
+            AND store_id = #{storeId}
+        </if>
+        <if test="uId !=null and uId !=''">
+            AND uid = #{uId}
+        </if>
+        <if test="withInvalid !=null and withInvalid !=''">
+            OR invalid_flag = #{withInvalid}
+        </if>
+    </select>
+
+    <update id="deleteByUid" parameterType="string">
+        UPDATE seller_store SET invalid_flag = 1 WHERE uid = #{uid}
+    </update>
+    <update id="deleteByPrimaryKey" parameterType="string">
+        UPDATE seller_store SET invalid_flag = 1 WHERE store_id = #{storeId}
+    </update>
+</mapper>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns="http://www.w3.org/1999/html" layout:decorator="layout">
+<head>
+    <title></title>
+    <link href="https://cdn.bootcss.com/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <style>
+        .task_process{
+            width: 1160px;
+            font-size: 14px;
+            color: #666;
+            padding: 0 20px;
+            height: 70px;
+            line-height: 70px;
+            margin-bottom: 30px;
+        }
+        .task_process span{
+            color: #D00;
+            font-size: 30px;
+            font-weight: bold;
+            padding-right: 5px;
+        }
+        .task_steps {
+            width: 100%;
+            margin-left: 20px;
+            border-bottom: 1px dashed #999;
+            overflow: hidden;
+            display: block;
+            padding-bottom: 30px;
+        }
+        .task_steps ul{
+            margin-left: 4px;
+            overflow: hidden;
+        }
+        .task_steps ul li{
+            float: left;
+            line-height: 60px;
+            font-size: 18px;
+            list-style: none;
+        }
+        .task_steps .active_li {
+            width: 150px;
+            height: 60px;
+            text-align: center;
+            background: #01ba3c;
+            color: #fff;
+            border-radius: 6px;
+        }
+        .task_steps .no_active_li {
+            width: 150px;
+            height: 60px;
+            text-align: center;
+            background: #aaa;
+            color: #fff;
+            border-radius: 6px;
+        }
+        .task_steps .active_gt{
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            color: #01ba3c;
+        }
+        .task_steps .no_active_gt{
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" layout:fragment="content">
+    <section class="content-header">
+        <h1>试客任务列表</h1>
+    </section>
+    <section class="content">
+        <div class="col-md-12 form-group">
+            <form th:action="${'/user/buyerTaskList'}" method="post">
+                用户id:<input id="uid" name="uid" th:value="${uid}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="用户id" />
+                账号:<input id="userAccount" name="userAccount" th:value="${userAccount}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="用户账号"/>
+                <button class="btn btn-default" style="vertical-align: top;" type="submit" title="查询">
+                    <i class="glyphicon glyphicon-search icon-search"></i>
+                </button>
+            </form>
+        </div>
+        <table id="table" class="table table-striped table-hover"></table>
+    </section>
+</div>
+<div style="display: none;" layout:fragment="script">
+    <!-- form validate -->
+    <script src="https://cdn.bootcss.com/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-validate/1.16.0/jquery.validate.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.js"></script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+        function renderTaskStep (row){
+            var stepLi = $(".task_steps ul."+ row.taskID +" li");
+            stepLi.each(function(index, ele){
+                if (ele.id.indexOf("gt") >= 0){
+                    var idNumber = ele.id.substring(2, 3);
+                    if (idNumber <= row.taskStatus) {
+                        $(ele).removeClass("no_active_gt").addClass("active_gt");
+                    }
+                }
+                if (ele.id.indexOf("status") >= 0) {
+                    var idNumber = ele.id.substring(6, 7);
+                    if(idNumber <= row.taskStatus){
+                        $(ele).removeClass("no_active_li").addClass("active_li");
+                    }
+                }
+            });
+        };
+
+        function tableDetailView(row){
+            var view =
+                '<div class="panel panel-info">'
+                + '<div class="panel-heading">'
+                + '<h3 class="panel-title" style="display: inline-block;">基本信息</h3>'
+                + '<a href="/user/taskInfo?taskID='+ row.taskID +'">查看详情</a>'
+                + '</div>'
+                + '<div class="panel-body">'
+                    + '<div class="col-md-3">'
+                        + '<div><label style="float: left">任务编号:</label><p style="padding-left: 70px;min-height: 20px">'+ row.taskID +'</p></div>'
+                        + '<div><label style="float: left">用户:</label><p style="padding-left: 70px;min-height: 20px">'+ row.userAccount +'</p></div>'
+                        + '<div><label style="float: left">买号:</label><p style="padding-left: 70px;min-height: 20px">'+ row.buyAccount +'</p></div>'
+                        + '<div><label style="float: left">商品名:</label><p style="padding-left: 70px;min-height: 20px">'+ row.goodsName +'</p></div>'
+                        + '<div><label style="float: left">支付金额:</label><p style="padding-left: 70px;min-height: 20px">'+ (row.tradeMoney ? row.tradeMoney : "-") +'</p></div>'
+                        + '<div><label style="float: left">卖家:</label><p style="padding-left: 70px;min-height: 20px">'+ row.sellerName +'</p></div>'
+                        + '<div><label style="float: left">商品链接:</label><p style="padding-left: 70px;min-height: 20px;word-wrap: break-word;">'+ row.goodsUrl +'</p></div>'
+
+                    + '</div>'
+                    + '<div class="col-md-9">'
+                        + '<div class="task_process"><span>试用进展</span>当前试客任务进展！</div>'
+                        + '<div class="task_steps">'
+                            + '<ul class="'+ row.taskID +'">'
+                                + '<li id="status1" class="no_active_li">申请试用</li>'
+                                + '<li id="gt2" class="no_active_gt">&gt;</li>'
+                                + '<li id="status2" class="no_active_li">审核试客</li>'
+                                + '<li id="gt3" class="no_active_gt">&gt;</li>'
+                                + '<li id="status3" class="no_active_li">下单付款</li>'
+                                + '<li id="gt4" class="no_active_gt">&gt;</li>'
+                                + '<li id="status4" class="no_active_li">收货好评</li>'
+                                + '<li id="gt5" class="no_active_gt">&gt;</li>'
+                                + '<li id="status5" class="no_active_li">平台返款</li>'
+                                + '<li id="gt6" class="no_active_gt">&gt;</li>'
+                                + '<li id="status6" class="no_active_li">完成任务</li>'
+                            + '</ul>'
+                        +  '</div>'
+                    +'</div>'
+                + '</div>'
+                + '</div>';
+
+            return view;
+        }
+
+        var height = $(window).width() <= 767 ? $(window).height() - 115 : $(window).height() - 80;
+        $('#table').bootstrapTable({
+            method: 'get',
+            url: '/user/taskList',
+            striped: true,  //表格显示条纹
+            pagination: true, //启动分页
+            paginationLoop: false, //
+            pageSize: 50,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [50, 100, 200],  //记录数可选列表
+            search: false,  //是否启用查询
+            sortable: false, //是否启用排序
+            showHeader: true, //
+            showFooter: true, //
+            singleSelect: true, //
+            toolbar: '#toolbar', //
+            stickyHeader: true, // 是否固定表头
+            sidePagination: "server", //表示服务端请求
+            queryParamsType: "undefined",// limit or undefined
+            queryParams: function queryParams(params) {  //设置查询参数
+                var param = {
+                    // 这里是在ajax发送请求的时候设置一些参数 params有什么东西，自己看看源码就知道了
+                    page: params.pageNumber - 1,
+                    size: params.pageSize,
+                    uid: /*[[${uid}]]*/,
+                    userAccount: /*[[${userAccount}]]*/,
+                };
+                return param;
+            },
+            detailView : true,
+            detailFormatter : function (index, row) {
+                var view = tableDetailView(row);
+                return view;
+            },
+            columns: [
+//                {checkbox: true, align: 'center', valign: 'middle'},
+                {field: 'taskID', title: '任务ID', align: 'center', valign: 'middle'},
+                {field: 'uid', title: '用户', align: 'center', valign: 'middle',
+                    formatter:function (value, row, index) {
+                        return '[' + row.uid + ']' + row.userAccount
+                    }
+                },
+                {field: 'goodsID', title: '商品', align: 'left', valign: 'left',
+                    formatter: function(value, row, index){
+                        return '[' + row.goodsID + ']' + row.goodsName;
+                    }
+                },
+                {field: 'goodsPrice', title: '商品价格', align: 'center', valign: 'middle'},
+                {field: 'tradeNo', title: '实际订单号', align: 'center', valign: 'middle'},
+                {field: 'tradeMoney', title: '实际支付金额', align: 'center', valign: 'middle'},
+                {field: 'goodsComment', title: '商品评论', align: 'left', valign: 'left'},
+                {field: 'giveUpReason', title: '放弃原因', align: 'center', valign: 'middle'},
+                {field: 'invalidFlag', title: '状态', align: 'center', valign: 'middle',
+                    formatter: function(value, row, index){
+                        return "<label class='"+ (value == 1? "label-danger" : "label-success") +"'>"+ (value == 1? "禁用" : "正常") +"</label>";
+                    }
+                }
+            ],
+            onExpandRow: function(index, row, $detail){
+                renderTaskStep(row);
+            }
+        });
+
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

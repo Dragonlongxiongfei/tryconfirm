@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout">
+<head>
+    <title></title>
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" layout:fragment="content" id = "mainContent">
+    <section class="content-header">
+        <h1>商品类别表</h1>
+    </section>
+    <section class="content">
+        <div class="col-md-12 form-group">
+            <form th:action="${'/gdclass/list'}" method="post">
+                分类ID:<input id="cId" name="cId" th:value="${cId}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="分类ID" />
+                分类名称:<input id="className" name="className" th:value="${className}" class="form-control" style="display: inline-block; width: auto" type="text" placeholder="分类名称" />
+
+                <label>
+                    <input type="checkbox" name="with_Invalid" th:value="1" th:checked="${withVild eq '1'}" /> 包含无效
+                </label>
+
+                <button class="btn btn-default" style="vertical-align: top;" type="submit" title="查询">
+                    <i class="glyphicon glyphicon-search icon-search"></i>
+                </button>
+
+                <br />
+            </form>
+        </div>
+        <div id="toolbar" class="btn-group">
+            <button id="btn_add" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-add" aria-hidden="true"></span>增加
+            </button>
+            <!--<button id="btn_edit" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
+            </button>-->
+        </div>
+        <table id="table" class="table" style="word-break:break-all; "></table>
+    </section>
+    <!-- 编辑模态框（Modal） -->
+    <div class="modal fade" id="modalDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/gdclass/update}" method="post" role="form" id="form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="dialogTitle">编辑</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group has-feedback">
+                            <div class="input-group-addon" style="background-color: #367fa9;color: white">分类名称</div>
+                            <input type="text" class="form-control" placeholder="分类名称" name="className"/>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <div class="input-group-addon" style="background-color: #367fa9;color: white">父级ID</div>
+                            <input type="text" class="form-control" placeholder="父级ID" name="parentId"/>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <div class="input-group-addon" style="background-color: #367fa9;color: white">分类图标</div>
+                            <a href="javascript:void(0)" class="file"> <input type="file" class="form-control" placeholder="分类图标" name="file"/></a>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <div class="input-group-addon" style="background-color: #367fa9;color: white">分类顺序</div>
+                            <input type="text" class="form-control" placeholder="分类顺序" name="classOrder"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">确认</button>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <span id="errContainer" style="color:red;"/>
+                        <input type="hidden" id="classId" name="classId"/>
+                        <!--<input type="hidden" id="roleId" name="roleId"/>
+                        <input type="hidden" id="roleVersion" name="roleVersion"/>-->
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    <!-- 新增 -->
+    <div class="modal fade" id="modalDialogi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/gdclass/insert}" method="post" role="form" id="form1">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="dialogTitle1">新增</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group has-feedback">
+                            <div class="input-group-addon" style="background-color: #367fa9;color: white">分类名称</div>
+                            <input type="text" class="form-control" placeholder="分类名称" name="className"/>
+                            <!--<div class="input-group-addon">.00</div>-->
+                        </div>
+                        <div class="form-group has-feedback">
+                            <div class="input-group-addon" style="background-color:#367fa9;color: white">父级ID</div>
+                            <input type="text" class="form-control" placeholder="父级ID" name="parentId"/>
+                        </div>
+                        <div class="form-group has-feedback" >
+                            <div class="input-group-addon" style="background-color: #367fa9;color: white">分类图标</div>
+                            <input type="file" class="form-control" placeholder="分类图标" name="file"/>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <div class="input-group-addon" style="background-color: #367fa9;color: white">分类顺序</div>
+                            <input type="text" class="form-control" placeholder="分类顺序" name="classOrder"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">确认</button>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <span id="errContainer1" style="color:red;"/>
+                        <!--<input type="hidden" id="roleId" name="roleId"/>
+                        <input type="hidden" id="roleVersion" name="roleVersion"/>-->
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
+<div style="display: none;" layout:fragment="script">
+    <!-- form validate -->
+    <script src="https://cdn.bootcss.com/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-validate/1.16.0/jquery.validate.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.1/jquery.form.js"></script>
+    <script type="application/javascript" th:inline="JavaScript">
+        /*<![CDATA[*/
+        function tableDataView(row) {
+            var view =
+                '<div class="panel panel-info">'
+                + '<div class="panel-heading">'
+                + '<h3 class="panel-title" style="display: inline-block;">基本信息</h3>'
+//                + '<a href="/task/sellertask?gid=' + row.goodsId + '">待审核任务详情</a>'
+                + '</div>'
+                + '<div class="panel-body">'
+                + '<div class="col-md-3">'
+                    + '<div><label style="float: left">商品分类id:</label><p style="padding-left: 70px;height: 20px">' + row.cId + '</p></div>'
+                    + '<div><label style="float: left">创建时间:</label><p style="padding-left: 70px;height: 20px">' + row.addTime + '</p></div>'
+                + '</div>'
+                + '<div class="col-md-3">'
+                    + '<div><label style="float: left">分类图标:</label><img src="' + row.classIcon + '" style="width: 270px;height: 270px"></div>'
+                + '</div>'
+                + '</div>'
+                + '</div>';
+
+            return view;
+        }
+        var height = $(window).width() <= 767 ? $(window).height() - 115 : $(window).height() - 80;
+        var $table =$('#table');
+        $table.bootstrapTable({
+            url: '/gdclass/data',
+            striped: true,  //表格显示条纹
+            pagination: true, //启动分页
+            paginationLoop: false, //
+            pageSize: 50,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [50, 100, 200],  //记录数可选列表
+            search: false,  //是否启用查询
+            sortable: true, //是否启用排序
+            showHeader: true, //
+            showFooter: true, //
+            showRefresh: true,
+            showColumns: true,
+            singleSelect: true, //
+            clickToSelect: true, //
+            toolbar: '#toolbar', //
+            stickyHeader: true, // 是否固定表头
+            sidePagination: "server", //表示服务端请求
+            detailView : true,
+            detailFormatter:  function (index, row) {
+                var aba = tableDataView(row);
+                return aba;
+            },
+            queryParamsType: "undefined",// limit or undefined
+            queryParams: function queryParams(params) {   //设置查询参数
+                var param = {
+                    //这里是在ajax发送请求的时候设置一些参数 params有什么东西，自己看看源码就知道了
+                    page: params.pageNumber - 1,
+                    size: params.pageSize,
+                    cId: /*[[${cId}]]*/,
+                    className: /*[[${className}]]*/,
+                    withVild: /*[[${withVild}]]*/
+                };
+                return param;
+            },
+            columns: [
+                {field: 'cId', title: '分类ID', align: 'center', valign: 'middle'},
+                {field: 'className', title: '分类名称', align: 'center', valign: 'middle'},
+                {field: 'parentId', title: '父类Id', align: 'center', valign: 'middle'},
+                {field: 'classOrder', title: '排序', align: 'center', valign: 'middle'},
+                {field: 'classIcon', title: '分类图标', align: 'center', valign: 'middle'},
+                {
+                    field: 'addTime',
+                    title: '提交时间',
+                    align: 'center',
+                    valign: 'middle'
+                },
+                {
+                    field: 'invalidFlag',
+                    title: '状态',
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: function (value, row, index) {
+                        if (value == '0') {
+                            return "<span class='label label-success'>有效</span>";
+                        }
+                        if (value == '1') {
+                            return "<span class='label label-success'>无效</span>";
+                        }
+                    }
+                },{
+                    title: '操作',
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: function (value,index,row) {
+//                        return '<a href="javascript:void(0)" onclick="updateAction()">修改</a>';
+                        return "<button class='btn btn-success btn-sm' onclick='updateAction()'>修改</button>&nbsp;";
+                    }
+                }
+            ]
+        });
+        $('#btn_add').click(function () {
+            $('#modalDialogi').modal('show');
+        });
+        function updateAction(){
+            var index = $("#table").find("tr.info").data("index");
+            var selObj = $('#table').bootstrapTable('getData')[index];
+//            var allData = selObj.rows().data();
+            if (selObj) {
+                document.forms["form"].classOrder.value = selObj.classOrder;
+                document.forms["form"].parentId.value = selObj.parentId;
+                document.forms["form"].className.value = selObj.className;
+                document.forms["form"].file.files[0] = selObj.classIcon;
+                document.forms["form"].classId.value = selObj.cId;
+                $('#modalDialog').modal('show');
+            } else {
+                alert('至少选择一条记录');
+             }
+        }
+        /*$('#btn_edit').click(function () {
+            var selObj = $('#table').bootstrapTable('getSelections');
+            if (selObj.length > 0) {
+                var row = selObj[0];
+                document.forms["form"].classOrder.value = row.classOrder;
+                document.forms["form"].parentId.value = row.parentId;
+                document.forms["form"].className.value = row.className;
+                document.forms["form"].file.files[0] = row.classIcon;
+                document.forms["form"].classId.value = row.cId;
+                $('#modalDialog').modal('show');
+            } else {
+                alert('至少选择一条记录');
+            }
+        });*/
+        $("#form").validate({
+            rules: {
+                className: 'required'
+            },
+            messages: {
+                className: '分类名不能为空'
+            },
+            focusCleanup: true,
+            focusInvalid: false,
+            onfocusin: function (element) {
+                $("#errContainer").html("");
+            },
+            errorPlacement: function (error, element) {
+                $("#errContainer").html("");
+                $("#errContainer").html($(error).text());
+            },
+            submitHandler: function (form) {
+                $(form).ajaxSubmit({
+                    success: function (responseText, statusText, xhr, $form) {
+                        var json = $.parseJSON(responseText);
+                        if (json.result == 'success') {
+                            window.location.reload();
+                        } else {
+                            alert(responseText);
+                        }
+                    }
+                });
+            }
+        });
+        $("#form1").validate({
+            rules: {
+                className: 'required'
+            },
+            messages: {
+                className: '分类名不能为空'
+            },
+            focusCleanup: true,
+            focusInvalid: false,
+            onfocusin: function (element) {
+                $("#errContainer1").html("");
+            },
+            errorPlacement: function (error, element) {
+                $("#errContainer1").html("");
+                $("#errContainer1").html($(error).text());
+            },
+            submitHandler: function (form) {
+                $(form).ajaxSubmit({
+                    success: function (responseText, statusText, xhr, $form) {
+                        var json = $.parseJSON(responseText);
+                        if (json.result == 'success') {
+                            window.location.reload();
+                        } else {
+                            alert(responseText);
+                        }
+                    }
+                });
+            }
+        });
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

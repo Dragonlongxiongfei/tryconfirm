@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.GdClassDao">
+
+    <sql id="selectAllAs">
+        SELECT
+        id as cId,
+        class_name AS  className,
+        parent_id AS  parentId,
+        class_order AS classOrder,
+        class_icon AS classIcon,
+        DATE_FORMAT(add_time, '%Y-%m-%d') AS addTime,
+        invalid_flag AS invalidFlag
+    </sql>
+
+    <select id="findGdClassPagable" parameterType="Map" resultType="com.chenyou.admin.domain.GdClass">
+        <include refid="selectAllAs"></include>
+        FROM
+        gd_class
+        WHERE
+        invalid_flag = 0
+        <if test="withVild != null and withVild != ''">
+            OR invalid_flag = #{withVild}
+        </if>
+        <if test="className != null and className != ''">
+            and class_name LIKE "%"#{className}"%"
+        </if>
+        <if test="cId != null and cId != ''">
+            and id = #{cId}
+        </if>
+
+        ORDER BY id DESC
+        <if test="page != null">
+            LIMIT #{page}, #{size}
+        </if>
+    </select>
+    <select id="findOne" parameterType="long" resultType="com.chenyou.admin.domain.SysUserBuyer">
+        <include refid="selectAllAs"></include> FROM sys_user
+        WHERE uid = #{uid}
+    </select>
+
+    <select id="getAllCount" parameterType="Map" resultType="int">
+        SELECT count(*) FROM gd_class
+        WHERE
+        invalid_flag = 0
+        <if test="withVild != null and withVild != ''">
+            OR invalid_flag = #{withVild}
+        </if>
+        <if test="className != null and className != ''">
+            and class_name LIKE "%"#{className}"%"
+        </if>
+        <if test="cId != null and cId != ''">
+            and id = #{cId}
+        </if>
+    </select>
+
+    <!--<update id="updateGdClass" parameterType="com.chenyou.admin.domain.GdClass">
+        UPDATE sys_user
+        SET
+        <if test="forbiddenTime != null and forbiddenTime != ''">
+            forbidden_time = #{forbiddenTime},
+        </if>
+        invalid_flag = #{invalidFlag}
+        WHERE
+        uid = #{uid}
+    </update>-->
+    
+    <insert id="insert" parameterType="com.chenyou.admin.domain.GdClass">
+        INSERT
+        into gd_class(class_name, class_order,parent_id,add_time,class_icon)
+        VALUES(#{className}, #{classOrder}, #{parentId},#{addTime},#{classIcon})
+        <!--<if test="className!=null">
+
+        </if>-->
+    </insert>
+
+    <update id="update" parameterType="com.chenyou.admin.domain.GdClass">
+        UPDATE
+        gd_class SET
+        <if test="className!=null">
+            class_name = #{className}
+        </if>
+        <if test="classOrder!=null">
+            ,class_order = #{classOrder}
+        </if>
+        <if test="parentId!=null">
+            ,parent_id = #{parentId}
+        </if>
+        <if test="classIcon!=null">
+            ,class_icon = #{classIcon}
+        </if>
+        WHERE id = #{cId}
+    </update>
+
+
+</mapper>

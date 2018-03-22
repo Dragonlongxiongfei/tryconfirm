@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenyou.admin.dao.FnWithdrawalRecordDao">
+
+    <select id="findListByPage" parameterType="Map" resultType="com.chenyou.admin.domain.FnWithdrawalRecord">
+        SELECT * FROM fn_withdrawal_record
+        <where>
+            <if test="uid != null and uid != ''">
+                uid = #{uid}
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+                and user_account = #{userAccount}
+            </if>
+            <if test="withdrawalType != null and withdrawalType != ''">
+                and withdrawal_type = #{withdrawalType}
+            </if>
+            <if test="page != null and page != ''">
+            LIMIT #{page}, #{size]
+            </if>
+        </where>
+    </select>
+
+    <select id="findTotal" parameterType="Map" resultType="Integer">
+      SELECT count(id) FROM fn_withdrawal_record
+    </select>
+
+
+</mapper>
